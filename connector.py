@@ -18,7 +18,7 @@ class connector:
 
         if not self.tunnel.is_open:
             self.tunnel.open()
-        logger.info("Connector to COM port was successful created")
+        logger.info(f"Connector to {self.tunnel.port} port was successfully created")
 
     def get_com_port(self):
         return self.tunnel
@@ -51,7 +51,7 @@ class connector:
         """
         if not os.path.isfile(path):
             raise Exception("invalid file path {!r}".format(path))
-        logger.info("read port prefernces from file %s", path)
+        logger.info("read port preferences from file %s", path)
         with open(path) as json_file:
             data = json.load(json_file)
             return {'port': data['port'], 'baudrate': data['baudrate'], "parity": data['parity'],

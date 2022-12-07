@@ -22,7 +22,7 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         """
         # need testing
         m_command.command.write_data(self)
-        position = m_command.LENGTH_EXTRA_DATA
+        position = m_command.LENGTH_EXTRA_DATA_COMMAND
         # write temperature
         temp = temp_converter.pc2tcu(self.m_temperature)
         self.command_array[position] = temp
@@ -55,4 +55,4 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         self.command_array[position] = self.m_conditionEventsLength
         position += 1
 
-        return position - m_command.LENGTH_EXTRA_DATA
+        return position - m_command.LENGTH_EXTRA_DATA_COMMAND

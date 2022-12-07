@@ -1,8 +1,9 @@
 import crc8
 import logging
 from Utilities import converters
-from commands import m_message
-import ack_code
+from commands import m_message, r_get_version_command
+import enums
+from commands.r_get_version_command import get_version_response
 
 logger = logging.getLogger(__name__)
 
@@ -11,9 +12,10 @@ LENGTH_INDEX = 1
 LENGTH_ID = LENGTH_INDEX + 2
 LENGTH_TOKEN = LENGTH_ID + 1
 LENGTH_TAG = LENGTH_TOKEN + 4
-LENGTH_EXTRA_DATA = LENGTH_TAG + 1
+LENGTH_EXTRA_DATA_COMMAND = LENGTH_TAG + 1
 # for response
 LENGTH_ACK_CODE = LENGTH_TAG + 1
+LENGTH_EXTRA_DATA_RESPONSE = LENGTH_ACK_CODE + 1
 
 DEVICE_TAG = {
     'Master': 0,
@@ -27,8 +29,7 @@ class command(m_message.message):
         # super(command, self).__init__()
         m_message.message.__init__(self)
         self.response = None
-        self.command_id = m_message.COMMAND_ID['GetVersion']
-        logging.info('%s COMMAND CREATE ', "GetVersion")
+        # logging.info('%s COMMAND CREATE ', "GetVersion")
 
     def to_bytes(self):
         """
@@ -110,12 +111,14 @@ class command(m_message.message):
         crc = buffer[CRC_INDEX]
         length = converters.to_uint_16(buffer, LENGTH_INDEX)
         if length + 1 > len(buffer):
-            raise ValueError("Invalid length of input buffer")
+            raise ValueError(f"Invalid length of input buffer: {length + 1}  len(buffer): {len(buffer)} ")
         crcCalculated = crc8.calculate(buffer, CRC_INDEX + 1, length)
         if crc != crcCalculated:
             raise ValueError("Invalid crc code")
-        self.command_id = buffer[LENGTH_ID]
-        #
+
+        if self.command_id != buffer[LENGTH_ID]:
+            raise ValueError("Invalid command id")
+
         # TODO create response command
         self.create_response(buffer)
 
@@ -130,10 +133,16 @@ class command(m_message.message):
             :Authors: bodomus@gmail.com
         """
         length = converters.to_uint_16(buffer, LENGTH_INDEX)
-        self.response = command()
+        self.build_response(self.command_id)
         self.response.command_id = buffer[LENGTH_ID]
         self.response.command_token = converters.to_uint_32(buffer, LENGTH_TOKEN)
         self.response.command_tag = buffer[LENGTH_TAG]
         self.response.command_ack_code = buffer[LENGTH_ACK_CODE]
-        # if self.response.command_ack_code == ack_code.ACKCODE['Ok']:
-        # TODO need complete
+        if self.response.command_ack_code == enums.ACKCODE['Ok']:
+            # TODO need complete
+            self.response.read_data(buffer, LENGTH_EXTRA_DATA_RESPONSE)
+
+    def build_response(self, command_id):
+        """ """
+        if command_id == 37:
+            self.response = get_version_response()

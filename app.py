@@ -4,6 +4,7 @@ import switch_command
 from commands import m_message
 from connector import connector
 import time
+from commands import m_getVersion_command
 
 
 class app:
@@ -18,8 +19,9 @@ class app:
         ser = con.get_com_port()
 
         while 1:
-            com = m_command.command()
             self.token += 1
+            com = m_getVersion_command.getVersion_command()
+
             com.command_token = self.token
             com.command_id = m_message.COMMAND_ID["GetVersion"]
             com.to_bytes()
@@ -39,6 +41,7 @@ class app:
             while ser.in_waiting:
                 data = ser.readline()
                 com.receive_response(header, data)
+                com.response.response_message()
                 print(f'Data:{data}')
 
             ser.close()

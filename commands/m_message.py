@@ -30,6 +30,7 @@ MAX_LENGTH = 512
 
 class message():
     def __init__(self):
+        self.command_id = COMMAND_ID['Undefined']
         self.command_array = None
         self.command_token = None
         self.command_tag = None
