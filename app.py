@@ -4,56 +4,46 @@ import switch_command
 from commands import m_message
 from connector import connector
 import time
-import serial
 
 
-def run():
+class app:
+    def __init__(self):
+        self.token = 0
 
-    SetTcuState = [0xc0, 0x0, 0xa, 0x29, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 10, 13]
+    def run(self):
+        # creator()
+        commands = input_commands()
+        commands.load_commands("commands.json")
+        con = connector("preferences.json")
+        ser = con.get_com_port()
 
-    # creator()
-    # commands = input_commands()
-    # commands.load_commands("commands.json")
-    #
-    # com = m_command.command()
-    # com.command_token = 2
-    # com.command_id = m_message.COMMAND_ID["GetVersion"]
-    # com.to_bytes()
-    #
-    #
-    # con = connector("preferences.json")
-    # ser = con.get_com_port()
+        while 1:
+            com = m_command.command()
+            self.token += 1
+            com.command_token = self.token
+            com.command_id = m_message.COMMAND_ID["GetVersion"]
+            com.to_bytes()
 
-    # ser = con.create_com_port()
-    ser = serial.Serial()
-    ser.baudrate = 9600
-    ser.port = 'COM3'
-    ser.timeout = 0.5
-    ser.write_timeout = 0.5
-    ser.open()
+            if not ser.is_open:
+                ser.open()
+            time.sleep(1)
+            send_length = ser.write(com.command_array)
+            ser.flush()
+            if send_length > 0:
+                com.send_message()
 
+            header = ser.read(4)
+            print(f'R={header} ')
+            command_length = com.header_from_bytes(header)
+            # ser.read_until(size=10)
+            while ser.in_waiting:
+                data = ser.readline()
+                com.receive_response(header, data)
+                print(f'Data:{data}')
 
-    while 1:
-        if not ser.is_open:
-            ser.open()
-        time.sleep(1)
-
-        l = [118, 0, 8, 37, 0, 0, 0, 2, 0]
-        l1 = [192, 0, 10, 41, 0, 0, 0, 1, 0, 10, 13]
-        len = ser.write(l1)
-
-        ser.flush()
-
-        r = ser.read(4)
-        print(f'R={r} ')
-        # ser.read_until(size=10)
-        while ser.in_waiting:
-            data = ser.readline().decode("ascii")
-            print(f'Data={data} length: {len(data)}')
-
-        ser.close()
-        if not ser.is_open:
-            print('port close')
+            ser.close()
+            if not ser.is_open:
+                print('port close')
 
 
 def creator():
@@ -63,6 +53,9 @@ def creator():
 
 if __name__ == '__main__':
     import logging.config
-    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
+
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',
+                        level=logging.DEBUG)
     logging.info('start app module.')
-    run()
+    app = app()
+    app.run()

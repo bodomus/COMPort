@@ -1,4 +1,0 @@
-
-gpython:S100"PRename method "GetStatusTCU" to match the regular expression ^[a-z_][a-z0-9_]*$.(ΰίνθ
-epython:S100"NRename method "GetVersion" to match the regular expression ^[a-z_][a-z0-9_]*$.(ΗΘ¦Τ
-kpython:S100"TRename method "FiniteRampByTime" to match the regular expression ^[a-z_][a-z0-9_]*$.(ν«•Γ

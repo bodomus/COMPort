@@ -4,6 +4,8 @@ from Utilities import converters
 from commands import m_message
 import ack_code
 
+logger = logging.getLogger(__name__)
+
 CRC_INDEX = 0
 LENGTH_INDEX = 1
 LENGTH_ID = LENGTH_INDEX + 2
@@ -35,26 +37,35 @@ class command(m_message.message):
         """
         if self.command_id == m_message.COMMAND_ID['Undefined']:
             raise ValueError("Invalid command id")
-        self.command_array = [0x00] * m_message.MAX_LENGTH
-        self.command_array[LENGTH_ID] = self.command_id
+        array1 = [0x00] * m_message.MAX_LENGTH
+        array1[LENGTH_ID] = self.command_id
         if self.command_token is not None:
             tok = converters.get_bytes32(self.command_token)
-            self.command_array[LENGTH_TOKEN] = tok[3]
-            self.command_array[LENGTH_TOKEN + 1] = tok[2]
-            self.command_array[LENGTH_TOKEN + 2] = tok[1]
-            self.command_array[LENGTH_TOKEN + 3] = tok[0]
-        self.command_array[LENGTH_TAG] = 0 if self.command_tag is None else self.command_tag
+            array1[LENGTH_TOKEN] = tok[3]
+            array1[LENGTH_TOKEN + 1] = tok[2]
+            array1[LENGTH_TOKEN + 2] = tok[1]
+            array1[LENGTH_TOKEN + 3] = tok[0]
+        array1[LENGTH_TAG] = 0 if self.command_tag is None else self.command_tag
         write_len = self.write_data()
         # write command length
         command_length = LENGTH_TAG + write_len
         array_length = converters.get_bytes16(command_length)
-        self.command_array[LENGTH_INDEX] = array_length[1]  #
-        self.command_array[LENGTH_INDEX + 1] = array_length[0]
-        # write_data
-
+        array1[LENGTH_INDEX] = array_length[1]  #
+        array1[LENGTH_INDEX + 1] = array_length[0]
         # write crc8
-        crc = crc8.calculate(self.command_array, CRC_INDEX + 1, command_length)
-        self.command_array[CRC_INDEX] = crc
+        crc = crc8.calculate(array1, CRC_INDEX + 1, command_length)
+        array1[CRC_INDEX] = crc
+        # create array for write to device
+        self.command_array = []
+        self.command_array = array1[0:command_length + 1]  # [0x00] * (array_length + 1)  # 0 end of data
+
+        # copy to new array
+    def send_message(self):
+        if self.command_id != m_message.COMMAND_ID['Undefined']:
+            logger.info(f'\tCommand {m_message.ID_TO_COMMAND[self.command_id]} was send to device')
+            logger.info(f'\tCommand token: {self.command_token}')
+            logger.info(f'\tWritten: {len(self.command_array)} bytes\n\n')
+
 
     def write_data(self):
         """
@@ -64,16 +75,17 @@ class command(m_message.message):
         return 0
         # TODO need implementation in subclass
 
-    def from_bytes(self, bytes):
+    def header_from_bytes(self, header):
         """
             Realizaation for TSA3 only
-            asdasda
-            :param bytes:
+            :param header: response header
+            :return: return command length.
         """
-        length = converters.to_int_16(bytes, LENGTH_INDEX)
-        super().command_id = m_message.ID_TO_COMMAND[bytes[LENGTH_ID]]
-        super().command_token = bytes[LENGTH_TOKEN]
-        super().command_tag = bytes[LENGTH_TAG]
+        length = converters.to_int_16(header, LENGTH_INDEX)
+        # self.command_id = m_message.ID_TO_COMMAND[header[LENGTH_ID]]
+        # self.command_token = header[LENGTH_TOKEN]
+        # self.command_tag = header[LENGTH_TAG]
+        return length
 
     def receive_response(self, header_buffer, body_buffer):
         """
@@ -100,7 +112,7 @@ class command(m_message.message):
         if length + 1 > len(buffer):
             raise ValueError("Invalid length of input buffer")
         crcCalculated = crc8.calculate(buffer, CRC_INDEX + 1, length)
-        if crc8 != crcCalculated:
+        if crc != crcCalculated:
             raise ValueError("Invalid crc code")
         self.command_id = buffer[LENGTH_ID]
         #

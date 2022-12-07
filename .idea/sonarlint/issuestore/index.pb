@@ -19,20 +19,14 @@ J
 ack_code.py,a\6\a655dd5b87d3ae8144673d8fdf400be78c6290b1
 D
 commands/__init__.py,3\0\30113bb467ae65d7a1c9f1ae0dc04eb36cfbad0e
-A
-switch_command.py,9\e\9ef337f940160966bcd840ad32667338cc98f691
 7
 crc8.py,b\4\b44590a38c0467bfc903666f6da7e3250a68452d
 =
 commands.json,1\e\1ec6ac2b187e28f0a3e8969cbaadc4406dd058f7
 A
 input_commands.py,a\e\ae7c8c5b806394f1e273d64796df4d83e78737cd
-@
-preferences.json,f\9\f9e104df57c18bd5c15bb225f9ac17bbb6a66339
 K
 Utilities/temp_converter.py,3\a\3ab34ea466610be60368075beb3da2e081c7dc63
-E
-commands/m_command.py,6\d\6dd2695b9965e0967fea1fb96f8ef219dc169383
 <
 connector.py,4\9\49b66e8a3132c071fa86a7eea5f903cce311294b
 G
@@ -45,7 +39,5 @@ _
 /commands/m_finite_ramp_safe_duration_command.py,b\4\b41a59902590947b88aa1a8bca18f83e7c81e45b
 R
 "commands/m_getstatusTCU_command.py,7\e\7e9ab1b90bb941567a8d9abc0608dffb812f074a
-E
-commands/m_message.py,6\4\6465c638942a888f3a55814d24580878fc42c5d9
 Q
 !commands/m_temperature_command.py,7\b\7bb2796abe79a02480a07f36305eee19b4c63d0f

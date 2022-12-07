@@ -1,4 +1,4 @@
-COMMAND_ID: {
+COMMAND_ID = {
     'Undefined': -1,
     'ProtocolError': 0,
     'FiniteRampByTime': 28,
@@ -10,7 +10,7 @@ COMMAND_ID: {
     'FiniteRampByRate': 85,
 }
 
-System_State: {
+System_State = {
     'SafeMode': 0,
     'SelfTest': 1,
     'RestMode': 2,
@@ -22,8 +22,10 @@ System_State: {
     'WritingBlackBox': 8
 }
 
-ID_TO_COMMAND: {item: key for key, item in COMMAND_ID.items()}
-MAX_LENGTH: 512
+ID_TO_COMMAND = {item: key for key, item in COMMAND_ID.items()}
+
+
+MAX_LENGTH = 512
 
 
 class message():
