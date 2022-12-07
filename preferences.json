@@ -1,0 +1,10 @@
+ {
+    "port": "COM3",
+    "baudrate":9600,
+    "parity":"None",
+    "stopbits":1,
+    "bytesize":8,
+    "timeout": 0.5,
+    "write_timeout": 0.5
+}
+

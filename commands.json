@@ -1,0 +1,40 @@
+	{
+		"Commands": [
+			{
+				"name": "GetVersion",
+				"crc": 0,
+				"commandId": 37,
+				"token": 100,
+				"tag": 0
+			},
+			{
+				"crc": 0,
+				"commandId": 33,
+				"name": "GetStatusTCU",
+				"token": 101,
+				"tag": 0
+			},
+			{
+				"crc": 0,
+				"commandId": 28,
+				"name": "FiniteRampByTime",
+				"token": 469,
+				"tag": 0,
+				"m_allowSafeDurationOffset": false,
+				"m_condEventsNo": 0,
+				"m_ignoreKdPidParameter": false,
+				"m_isAllowEmptyBuffer": true,
+				"m_isCreateTimeMark": false,
+				"m_isDynamicFactor": false,
+				"m_isGenerated": false,
+				"m_isPeakDetect": false,
+				"m_isStopOnResponseUnitNo": false,
+				"m_isStopOnResponseUnitYes": false,
+				"m_isTransactionFailed": false,
+				"m_isUseTimeMark": false,
+				"m_isWaitForTrigger": false,
+				"m_temperature": 32,
+				"m_time": 100
+			}
+		]
+	}

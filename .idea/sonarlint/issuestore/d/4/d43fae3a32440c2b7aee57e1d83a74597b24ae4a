@@ -1,0 +1,4 @@
+
+Žpython:S101"rRename class "finiteRampByTime_command" to match the regular expression ^_?([A-Z_][a-zA-Z0-9]*|[a-z_][a-z0-9_]*)$.(ÓÃ÷Øýÿÿÿÿ
+spython:S117"\Rename this local variable "optionsByte" to match the regular expression ^[_a-z][a-z0-9_]*$.(¢—„Æ
+Gpython:S1481"/Remove the unused local variable "optionsByte".(¢—„Æ

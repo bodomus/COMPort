@@ -1,0 +1,8 @@
+
+Bpython:S125"Remove this commented out code.(üöÌýÿÿÿÿ8´ É¹Î0
+„python:S5864%"eFix this "__getitem__" operation; Previous type checks suggest that "data" does not have this method.(ðÎ¶8Ç»„¹Î0
+„python:S5864&"eFix this "__getitem__" operation; Previous type checks suggest that "data" does not have this method.(´–«8Ç»„¹Î0
+„python:S5864'"eFix this "__getitem__" operation; Previous type checks suggest that "data" does not have this method.(ƒ¹©ô8È»„¹Î0
+„python:S5864("eFix this "__getitem__" operation; Previous type checks suggest that "data" does not have this method.(…Ž…Ã8È»„¹Î0
+Upython:S1125">Replace this generic exception class with a more specific one.(‚Ñœç
+6python:S125<"Remove this commented out code.(›³Ï¸
