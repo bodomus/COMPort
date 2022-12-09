@@ -6,6 +6,7 @@ COMMAND_ID = {
     'InfiniteRamp': 30,
     'GetStatusTCU': 33,
     'GetVersion': 37,
+    'SetTcuState': 41,
     'GetCurrentPID': 70,
     'FiniteRampByRate': 85,
 }

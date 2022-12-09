@@ -4,7 +4,7 @@ import switch_command
 from commands import m_message
 from connector import connector
 import time
-from commands import m_getVersion_command
+from commands import m_getVersion_command, m_set_TCU_state
 
 
 class app:
@@ -20,10 +20,8 @@ class app:
 
         while 1:
             self.token += 1
-            com = m_getVersion_command.getVersion_command()
-
+            com = m_set_TCU_state.set_TCU_state_command()
             com.command_token = self.token
-            com.command_id = m_message.COMMAND_ID["GetVersion"]
             com.to_bytes()
 
             if not ser.is_open:
@@ -36,7 +34,7 @@ class app:
 
             header = ser.read(4)
             print(f'R={header} ')
-            command_length = com.header_from_bytes(header)
+            command_length = com.header_length_from_bytes(header)
             # ser.read_until(size=10)
             while ser.in_waiting:
                 data = ser.readline()

@@ -1,4 +1,6 @@
 import logging
+
+from commands.m_command import command
 from commands.m_finite_ramp_safe_duration_command import *
 from Utilities import temp_converter, converters
 from commands import m_message, m_command
@@ -56,3 +58,13 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         position += 1
 
         return position - m_command.LENGTH_EXTRA_DATA_COMMAND
+
+    def send_message(self):
+        """
+        send message to device
+        :return:
+        """
+        command.send_message()
+        logger.info(f'\tfinite_ramp_by_time: was send to device')
+        logger.info(f'\t\t: {self.m_temperature}')
+        logger.info(f'\t\t: {self.m_time}')

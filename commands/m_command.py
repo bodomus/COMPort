@@ -4,6 +4,7 @@ from Utilities import converters
 from commands import m_message, r_get_version_command
 import enums
 from commands.r_get_version_command import get_version_response
+from commands.response import response
 
 logger = logging.getLogger(__name__)
 
@@ -26,10 +27,8 @@ DEVICE_TAG = {
 class command(m_message.message):
 
     def __init__(self):
-        # super(command, self).__init__()
         m_message.message.__init__(self)
         self.response = None
-        # logging.info('%s COMMAND CREATE ', "GetVersion")
 
     def to_bytes(self):
         """
@@ -47,7 +46,9 @@ class command(m_message.message):
             array1[LENGTH_TOKEN + 2] = tok[1]
             array1[LENGTH_TOKEN + 3] = tok[0]
         array1[LENGTH_TAG] = 0 if self.command_tag is None else self.command_tag
-        write_len = self.write_data()
+        extra_data = self.write_data()
+        array1.extend(extra_data)
+        write_len = len(extra_data)
         # write command length
         command_length = LENGTH_TAG + write_len
         array_length = converters.get_bytes16(command_length)
@@ -61,22 +62,22 @@ class command(m_message.message):
         self.command_array = array1[0:command_length + 1]  # [0x00] * (array_length + 1)  # 0 end of data
 
         # copy to new array
+
     def send_message(self):
         if self.command_id != m_message.COMMAND_ID['Undefined']:
             logger.info(f'\tCommand {m_message.ID_TO_COMMAND[self.command_id]} was send to device')
             logger.info(f'\tCommand token: {self.command_token}')
             logger.info(f'\tWritten: {len(self.command_array)} bytes\n\n')
 
-
     def write_data(self):
         """
         :param buffer: bytes array of command
-        :return: count bytes was writen in buffer
+        :return: array of extra data
         """
-        return 0
+        return []
         # TODO need implementation in subclass
 
-    def header_from_bytes(self, header):
+    def header_length_from_bytes(self, header):
         """
             Realizaation for TSA3 only
             :param header: response header
@@ -139,10 +140,11 @@ class command(m_message.message):
         self.response.command_tag = buffer[LENGTH_TAG]
         self.response.command_ack_code = buffer[LENGTH_ACK_CODE]
         if self.response.command_ack_code == enums.ACKCODE['Ok']:
-            # TODO need complete
             self.response.read_data(buffer, LENGTH_EXTRA_DATA_RESPONSE)
 
     def build_response(self, command_id):
         """ """
         if command_id == 37:
             self.response = get_version_response()
+        if command_id == 41:
+            self.response = response()

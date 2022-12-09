@@ -84,14 +84,14 @@ class get_statusTCU_response(get_status_response):
         current_position = start_position
         get_status_response.read_data(self, buffer)
 
-        self.m_timestamp = converters.to_uint_32(buffer, self.start_position)
-        self.start_position += 4
-        self.m_temperatureBufferStartTime = converters.to_uint_32(buffer, self.start_position)
-        self.start_position += 4
-        self.m_executingCommandToken = converters.to_uint_32(buffer, self.start_position)
-        self.start_position += 4
+        self.m_timestamp = converters.to_uint_32(buffer, start_position)
+        start_position += 4
+        self.m_temperatureBufferStartTime = converters.to_uint_32(buffer, start_position)
+        start_position += 4
+        self.m_executingCommandToken = converters.to_uint_32(buffer, start_position)
+        start_position += 4
         m_system_status_byte = buffer[start_position]
-        self.start_position += 1
+        start_position += 1
         self.m_systemState = m_system_status_byte & self.SYSTEM_STATE_MASK
         self.m_isWaitForTrigger = converters.get_bit(m_system_status_byte, self.SYSTEM_STATUS_BIT_ERROR)
         self.m_covas = buffer[start_position]
@@ -117,7 +117,6 @@ class get_statusTCU_response(get_status_response):
             temp = converters.to_int_16(buffer, start_position)
             start_position += 2
             self.m_heaterTemperature.append(temp_converter.tcu2pc(temp))
-
 
         # m_tecTemperature  parser
         # for (int i = 0; i < tecQuantity; i++)
@@ -213,6 +212,3 @@ class get_statusTCU_response(get_status_response):
         self.m_slave_isWaitForTrigger = buffer[start_position]
         start_position += 1
         return start_position - current_position
-
-
-

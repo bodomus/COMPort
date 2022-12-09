@@ -29,25 +29,24 @@ TsaModel = {
 }
 
 HealthStatus = {
-        'Ok':  0,
-        'APosVoltageFailure': 1,                 # APOS voltage is out of range
-        'VPVoltageFailure': 2,                   # VP voltage is out of range
-        'VrefVoltageFailure': 4,                 # Vref voltage is out of range
-        'MTECCurrentFailure': 8,                 # Main TEC driver current is out of range
-        'RTECCurrentFailure': 16,                # Reference TEC driver current is out of range
-        'MTECVoltageFailure': 32,                # Main TEC driver voltage is out of range
-        'RTECVoltageFailure': 64,                # Reference TEC driver voltage is out of range
-        'PumpCurrentFailure': 128,               # Pump current is out of range
-        'WDTSelfTestFailureOffset': 256,         # WDT self-test failed
-        'EmergencyButtonStatusOffset': 512,      # Emergency button pressed
-        'WaterLevelWarningOffset': 1024,         # Water level is too low
-        'MFanFailureOffset': 2048,               # Main thermode fan rotor locked
-        'RFanFailureOffset': 4096,               # Reference thermode fan rotor locked
-        'ICUFanFailureOffset': 8192,             # Cooling unit fan rotor locked
-        'ICUPumpFailureOffset': 16384,           # Cooling unit pump rotor locked
-        'ICUTECFailureOffset': 32768             # Cooling unit TEC doesn't respond
+    'Ok': 0,
+    'APosVoltageFailure': 1,  # APOS voltage is out of range
+    'VPVoltageFailure': 2,  # VP voltage is out of range
+    'VrefVoltageFailure': 4,  # Vref voltage is out of range
+    'MTECCurrentFailure': 8,  # Main TEC driver current is out of range
+    'RTECCurrentFailure': 16,  # Reference TEC driver current is out of range
+    'MTECVoltageFailure': 32,  # Main TEC driver voltage is out of range
+    'RTECVoltageFailure': 64,  # Reference TEC driver voltage is out of range
+    'PumpCurrentFailure': 128,  # Pump current is out of range
+    'WDTSelfTestFailureOffset': 256,  # WDT self-test failed
+    'EmergencyButtonStatusOffset': 512,  # Emergency button pressed
+    'WaterLevelWarningOffset': 1024,  # Water level is too low
+    'MFanFailureOffset': 2048,  # Main thermode fan rotor locked
+    'RFanFailureOffset': 4096,  # Reference thermode fan rotor locked
+    'ICUFanFailureOffset': 8192,  # Cooling unit fan rotor locked
+    'ICUPumpFailureOffset': 16384,  # Cooling unit pump rotor locked
+    'ICUTECFailureOffset': 32768  # Cooling unit TEC doesn't respond
 }
-
 
 ACKCODE = {
     'Ok': 0,
@@ -68,3 +67,14 @@ ACKCODE = {
 
 ID_TO_ACKCODE = {item: key for key, item in ACKCODE.items()}
 
+SystemState = {
+    'SafeMode': 0,
+    'SelfTest': 1,
+    'RestMode': 2,
+    'TestInit': 3,
+    'TestRun': 4,
+    'TestPaused': 5,
+    'Engineering': 6,
+    'FrimwareUpdate': 7,
+    'WritingBlackBox': 8
+}
