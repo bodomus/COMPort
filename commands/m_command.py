@@ -3,6 +3,7 @@ import logging
 from Utilities import converters
 from commands import m_message, r_get_version_command
 import enums
+from commands.r_get_status_TCU import get_statusTCU_response
 from commands.r_get_version_command import get_version_response
 from commands.response import response
 
@@ -10,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 CRC_INDEX = 0
 LENGTH_INDEX = 1
-LENGTH_ID = LENGTH_INDEX + 2
-LENGTH_TOKEN = LENGTH_ID + 1
-LENGTH_TAG = LENGTH_TOKEN + 4
-LENGTH_EXTRA_DATA_COMMAND = LENGTH_TAG + 1
+ID_INDEX = LENGTH_INDEX + 2
+TOKEN_INDEX = ID_INDEX + 1
+TAG_INDEX = TOKEN_INDEX + 4
+LENGTH_EXTRA_DATA_COMMAND = TAG_INDEX + 1
 # for response
-LENGTH_ACK_CODE = LENGTH_TAG + 1
-LENGTH_EXTRA_DATA_RESPONSE = LENGTH_ACK_CODE + 1
+ACK_CODE_INDEX = TAG_INDEX + 1
+EXTRA_DATA_RESPONSE_INDEX = ACK_CODE_INDEX + 1
 
 DEVICE_TAG = {
     'Master': 0,
@@ -38,28 +39,34 @@ class command(m_message.message):
         if self.command_id == m_message.COMMAND_ID['Undefined']:
             raise ValueError("Invalid command id")
         array1 = [0x00] * m_message.MAX_LENGTH
-        array1[LENGTH_ID] = self.command_id
+        array1[ID_INDEX] = self.command_id
         if self.command_token is not None:
             tok = converters.get_bytes32(self.command_token)
-            array1[LENGTH_TOKEN] = tok[3]
-            array1[LENGTH_TOKEN + 1] = tok[2]
-            array1[LENGTH_TOKEN + 2] = tok[1]
-            array1[LENGTH_TOKEN + 3] = tok[0]
-        array1[LENGTH_TAG] = 0 if self.command_tag is None else self.command_tag
+            array1[TOKEN_INDEX] = tok[3]
+            array1[TOKEN_INDEX + 1] = tok[2]
+            array1[TOKEN_INDEX + 2] = tok[1]
+            array1[TOKEN_INDEX + 3] = tok[0]
+        array1[TAG_INDEX] = 0 if self.command_tag is None else self.command_tag
         extra_data = self.write_data()
-        array1.extend(extra_data)
         write_len = len(extra_data)
+        i = 0
+        while i < write_len:
+            array1[LENGTH_EXTRA_DATA_COMMAND + i] = extra_data[i]
+            i += 1
         # write command length
-        command_length = LENGTH_TAG + write_len
-        array_length = converters.get_bytes16(command_length)
+        command_length = TAG_INDEX + write_len + 1
+        array_length = converters.get_bytes16(command_length - 1)
         array1[LENGTH_INDEX] = array_length[1]  #
         array1[LENGTH_INDEX + 1] = array_length[0]
         # write crc8
-        crc = crc8.calculate(array1, CRC_INDEX + 1, command_length)
+        crc = crc8.calculate(array1, CRC_INDEX + 1, command_length - 1)
         array1[CRC_INDEX] = crc
         # create array for write to device
         self.command_array = []
-        self.command_array = array1[0:command_length + 1]  # [0x00] * (array_length + 1)  # 0 end of data
+        if (write_len > 0):
+            self.command_array = array1[0:command_length]
+        else:
+            self.command_array = array1[0:command_length]
 
         # copy to new array
 
@@ -96,9 +103,9 @@ class command(m_message.message):
         :return:
         """
         command_length = converters.to_u_int_16_ex(header_buffer, LENGTH_INDEX) - len(header_buffer) + 1
-        buffer = list(header_buffer)
-        buffer.extend(body_buffer[0: command_length])
-        self.get_message(buffer)
+        buf = list(header_buffer)
+        buf.extend(body_buffer[0: command_length])
+        self.get_message(buf)
 
     def get_message(self, buffer):
         """
@@ -117,34 +124,45 @@ class command(m_message.message):
         if crc != crcCalculated:
             raise ValueError("Invalid crc code")
 
-        if self.command_id != buffer[LENGTH_ID]:
+        if self.command_id != buffer[ID_INDEX]:
             raise ValueError("Invalid command id")
 
         # TODO create response command
         self.create_response(buffer)
 
-    def create_response(self, buffer) -> object:
+    def create_response(self, buffer):
         """
             Вызывается когда получен ответ от железа для конвертации байтов в команду
-            :type list
             :param buffer
-            :return object: response
             :Date: 2022-11-30
             :Version: 1
             :Authors: bodomus@gmail.com
         """
         length = converters.to_uint_16(buffer, LENGTH_INDEX)
         self.build_response(self.command_id)
-        self.response.command_id = buffer[LENGTH_ID]
-        self.response.command_token = converters.to_uint_32(buffer, LENGTH_TOKEN)
-        self.response.command_tag = buffer[LENGTH_TAG]
-        self.response.command_ack_code = buffer[LENGTH_ACK_CODE]
+        self.response.command_id = buffer[ID_INDEX]
+        self.response.command_token = converters.to_uint_32(buffer, TOKEN_INDEX)
+        self.response.command_tag = buffer[TAG_INDEX]
+        self.response.command_ack_code = buffer[ACK_CODE_INDEX]
         if self.response.command_ack_code == enums.ACKCODE['Ok']:
-            self.response.read_data(buffer, LENGTH_EXTRA_DATA_RESPONSE)
+            self.response.read_data(buffer, EXTRA_DATA_RESPONSE_INDEX)
 
     def build_response(self, command_id):
         """ """
+
+        if command_id == 33:  # get status TCU
+            self.response = get_statusTCU_response()
+        if command_id == 22:  # RunTest
+            self.response = response()
+        if command_id == 27:  # ClearCommandBuffer
+            self.response = response()
         if command_id == 37:
             self.response = get_version_response()
-        if command_id == 41:
+        if command_id == 41:  # SetTcuState
+            # TODO need check return extra data
             self.response = response()
+        if command_id == 47:  # StopTest
+            self.response = response()
+        if command_id == 25:  # EndTest
+            self.response = response()
+

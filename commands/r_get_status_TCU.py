@@ -1,8 +1,9 @@
-from response import *
-from m_command import *
-from r_status import *
-from Utilities import temp_converter
+import logging
 import enums
+from Utilities import temp_converter, converters
+from commands.m_message import COMMAND_ID
+from commands.r_get_pid_calculation_response import get_pid_calculation_response
+from commands.r_status import get_status_response
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +53,7 @@ class get_statusTCU_response(get_status_response):
         self.m_chepsResponse = 0.0
         self.m_atsResponse = 0.0
         self.response = None
-        self.command_id = m_message.COMMAND_ID['GetStatusTCU']
+        self.command_id = COMMAND_ID['GetStatusTCU']
 
         # bit 0 - main thermode enabled / disabled
         # bit 1 - ref thermode enabled / disabled
@@ -82,7 +83,7 @@ class get_statusTCU_response(get_status_response):
         :return: count bytes read
         """
         current_position = start_position
-        get_status_response.read_data(self, buffer)
+        get_status_response.read_data(self, buffer, current_position)
 
         self.m_timestamp = converters.to_uint_32(buffer, start_position)
         start_position += 4
@@ -113,7 +114,7 @@ class get_statusTCU_response(get_status_response):
         # for (int i = 0; i < heaterQuantity; i++)
         #     this.HeaterTemperature.Add(TempConverter.TCU2PC(reader.ReadInt16()));
         self.m_heaterTemperature = []
-        for x in range(0, heaterQuantity - 1):
+        for x in range(0, heaterQuantity):
             temp = converters.to_int_16(buffer, start_position)
             start_position += 2
             self.m_heaterTemperature.append(temp_converter.tcu2pc(temp))
@@ -124,7 +125,7 @@ class get_statusTCU_response(get_status_response):
         tec_quantity = buffer[start_position]
         start_position += 1
         self.m_tecTemperature = []
-        for x in range(0, tec_quantity - 1):
+        for x in range(0, tec_quantity):
             tec = converters.to_int_16(buffer, start_position)
             start_position += 2
             self.m_heaterTemperature.append(temp_converter.tcu2pc(tec))
@@ -177,7 +178,7 @@ class get_statusTCU_response(get_status_response):
         cnt = buffer[start_position]
         start_position += 1
         self.m_slave_tecTemperature = []
-        for x in range(0, cnt - 1):
+        for x in range(0, cnt):
             temp = converters.to_int_16(buffer, start_position)
             start_position += 2
             self.m_slave_tecTemperature.append(temp_converter.tcu2pc(temp))
@@ -189,16 +190,23 @@ class get_statusTCU_response(get_status_response):
         cnt = buffer[start_position]
         start_position += 1
         self.m_pid_data = []
-        for x in range(0, cnt - 1):
+        for x in range(0, cnt):
             # TODO Need implementation new GetPIDCalculationsResponse(reader, type)
-            self.m_pid_data.append(None)
+            pid_position = start_position
+            pid_response = get_pid_calculation_response()
+            start_position = pid_response.read_data(buffer, pid_position)
+            self.m_pid_data.append(pid_response)
 
         cnt = buffer[start_position]
         start_position += 1
         self.m_slave_pid_data = []
-        for x in range(0, cnt - 1):
+        for x in range(0, cnt):
             # TODO Need implementation new GetPIDCalculationsResponse(reader, type)
-            self.m_slave_pid_data.append(None)
+            pid_position = start_position
+            slave_pid_response = get_pid_calculation_response()
+            start_position = slave_pid_response.read_data(buffer, pid_position)
+            self.m_slave_pid_data.append(slave_pid_response)
+
         self.m_slave_temperatureBufferStartTime = converters.to_uint_32(buffer, start_position)
         start_position += 4
         self.m_slave_executingCommandToken = converters.to_uint_32(buffer, start_position)
@@ -212,3 +220,13 @@ class get_statusTCU_response(get_status_response):
         self.m_slave_isWaitForTrigger = buffer[start_position]
         start_position += 1
         return start_position - current_position
+
+    def __str__(self):
+        base = str(get_status_response.__str__(self))
+        info = "{0}\nTimestamp: {1}\nCurrent thermode: {2}\nHeater temperatures count: {3}\n" \
+                "TEC temperatures count: {4}\nWater temperature: {5}\nCOVAS: {6}\nExternal Trigger: {7}\n" \
+                "External Trigger Timestamp: {8}\nRU Yes Timestamp: {9}\nRU No Timestamp: {10}".format(
+            base, self.m_timestamp, self.m_currentThermode, len(self.m_heaterTemperature),
+            len(self.m_tecTemperature), self.m_waterTemperature, self.m_covas, self.m_isExternalTriggerOn,
+            self.m_externalTriggerTimestamp, "", "")
+        return info

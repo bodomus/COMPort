@@ -1,12 +1,17 @@
 COMMAND_ID = {
     'Undefined': -1,
     'ProtocolError': 0,
+    'RunTest':  22,
+    'EndTest': 25,
+    'ClearCommandBuffer': 27,
     'FiniteRampByTime': 28,
     'FiniteRampByTemperature': 29,
     'InfiniteRamp': 30,
     'GetStatusTCU': 33,
     'GetVersion': 37,
     'SetTcuState': 41,
+    'SimulateResponseUnit': 45,
+    'StopTest': 47,
     'GetCurrentPID': 70,
     'FiniteRampByRate': 85,
 }
@@ -35,4 +40,6 @@ class message():
         self.command_array = None
         self.command_token = None
         self.command_tag = None
-        # self.command_id : COMMAND_ID['Undefined'] if command_id is None else command_id
+
+    def __str__(self):
+        return f"command_id: {self.command_id} command_token: {self.command_token} command_tag: {self.command_tag}"

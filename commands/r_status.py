@@ -1,5 +1,5 @@
-from response import *
-from m_command import *
+import logging
+from commands.response import response
 
 logger = logging.getLogger(__name__)
 

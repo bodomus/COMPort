@@ -9,10 +9,11 @@ def pc2tcu(val: float) -> int:
     """
     val /= TCU_TO_PC
     if val >= 0:
-        return val + 0.5
+        return int(val + 0.5)
     else:
-        return val - 0.5
+        return int(val - 0.5)
+
 
 # need test
 def tcu2pc(val):
-    return val * TCU_TO_PC;
+    return val * TCU_TO_PC

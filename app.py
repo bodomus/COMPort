@@ -1,4 +1,6 @@
+import enums
 from commands import m_command
+from commands.m_getstatusTCU_command import get_status_TCU_command
 from input_commands import *
 import switch_command
 from commands import m_message
@@ -20,7 +22,12 @@ class app:
 
         while 1:
             self.token += 1
-            com = m_set_TCU_state.set_TCU_state_command()
+            # com = m_set_TCU_state.set_TCU_state_command()
+            # com.command_token = self.token
+            # com.m_state = enums.SystemState['SafeMode']
+            # com.m_runSelfTest = True
+            # com.to_bytes()
+            com = get_status_TCU_command()
             com.command_token = self.token
             com.to_bytes()
 
@@ -40,7 +47,7 @@ class app:
                 data = ser.readline()
                 com.receive_response(header, data)
                 com.response.response_message()
-                print(f'Data:{data}')
+                logger.info(str(com.response))
 
             ser.close()
             if not ser.is_open:
