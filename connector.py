@@ -18,7 +18,7 @@ class connector:
 
         if not self.tunnel.is_open:
             self.tunnel.open()
-        logger.info(f"Connector to {self.tunnel.port} port was successfully created")
+        logger.info(f"Connector to {self.tunnel.port} port was successfully created\n\n")
 
     def get_com_port(self):
         return self.tunnel

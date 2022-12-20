@@ -1,5 +1,6 @@
 #from response import *
 from Utilities import converters
+from commands.m_message import message
 from commands.response import response
 import logging
 #from m_command import *
@@ -17,6 +18,10 @@ class get_version_response(response):
         self.m_version = converters.to_string(buffer, start_position)
 
     def response_message(self):
-        response.response_message(self)
-        logger.info(f'Response from device:::version {self.m_version}')
+        logger.info(f'{str(self)}')
+
+    def __str__(self):
+        base = message.__str__(self)
+        return f'RESPONSE::: {message.__str__(self)} ack code {str(self.command_ack_code)} \n\t\t\t\t\t\t\t ' \
+               f'GetVersion: {self.m_version}\n '
 

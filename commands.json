@@ -1,6 +1,15 @@
 	{
 		"Commands": [
 			{
+				"name": "SetTcuState",
+				"crc": 0,
+				"commandId": 41,
+				"token": 100,
+				"tag": 0,
+				"m_state": 1,
+				"m_runSelfTest": true
+			},
+			{
 				"name": "GetVersion",
 				"crc": 0,
 				"commandId": 37,
@@ -8,11 +17,40 @@
 				"tag": 0
 			},
 			{
-				"crc": 0,
-				"commandId": 33,
-				"name": "GetStatusTCU",
+				"name": "SetTcuState",
+				"commandId": 41,
+				"token": 101,
+				"tag": 0,
+				"m_state": 2,
+				"m_runSelfTest": true
+			},
+			{
+				"name": "GetActiveThermode",
+				"commandId": 19,
+				"token": 101,
+				"tag": 0,
+				"m_thermodeId": 0
+			},
+			{
+				"name": "SetTcuState",
+				"commandId": 41,
+				"token": 101,
+				"tag": 0,
+				"m_state": 3,
+				"m_runSelfTest": true
+			},
+			{
+				"name": "ClearCommandBuffer",
+				"commandId": 27,
 				"token": 101,
 				"tag": 0
+			},
+			{
+				"name": "RunTest",
+				"commandId": 22,
+				"token": 101,
+				"tag": 0,
+				"m_isResetClock": true
 			},
 			{
 				"crc": 0,
@@ -21,20 +59,76 @@
 				"token": 469,
 				"tag": 0,
 				"m_allowSafeDurationOffset": false,
-				"m_condEventsNo": 0,
-				"m_ignoreKdPidParameter": false,
-				"m_isAllowEmptyBuffer": true,
-				"m_isCreateTimeMark": false,
-				"m_isDynamicFactor": false,
-				"m_isGenerated": false,
+				"m_isWaitForTrigger": false,
 				"m_isPeakDetect": false,
+				"m_isCreateTimeMark": false,
+				"m_isUseTimeMark": false,
+				"m_isDynamicFactor": false,
+				"m_isAllowEmptyBuffer": true,
+				"m_ignoreKdPidParameter": false,
 				"m_isStopOnResponseUnitNo": false,
 				"m_isStopOnResponseUnitYes": false,
-				"m_isTransactionFailed": false,
-				"m_isUseTimeMark": false,
-				"m_isWaitForTrigger": false,
 				"m_temperature": 32,
 				"m_time": 100
+			},{
+				"name": "StopTest",
+				"commandId": 47,
+				"token": 101,
+				"tag": 0
+			},{
+				"crc": 0,
+				"commandId": 29,
+				"name": "FiniteRampByTemperature",
+				"token": 469,
+				"tag": 0,
+				"m_allowSafeDurationOffset": false,
+				"m_isWaitForTrigger": false,
+				"m_isPeakDetect": false,
+				"m_isCreateTimeMark": false,
+				"m_isDynamicFactor": false,
+				"m_isAllowEmptyBuffer": true,
+				"m_ignoreKdPidParameter": false,
+				"m_isStopOnResponseUnitNo": false,
+				"m_isStopOnResponseUnitYes": false,
+				"m_temperature": 32,
+				"m_time": 100
+			},{
+				"crc": 0,
+				"commandId": 28,
+				"name": "FiniteRampByTime",
+				"token": 469,
+				"tag": 0,
+				"m_allowSafeDurationOffset": false,
+				"m_isWaitForTrigger": false,
+				"m_isPeakDetect": false,
+				"m_isCreateTimeMark": false,
+				"m_isUseTimeMark": false,
+				"m_isDynamicFactor": false,
+				"m_isAllowEmptyBuffer": true,
+				"m_ignoreKdPidParameter": false,
+				"m_isStopOnResponseUnitNo": false,
+				"m_isStopOnResponseUnitYes": false,
+				"m_temperature": 32,
+				"m_time": 100
+			},{
+				"name": "EndTest",
+				"commandId": 25,
+				"token": 101,
+				"tag": 0
+			},{
+				"name": "SimulateResponseUnit",
+				"commandId": 45,
+				"token": 101,
+				"tag": 0,
+				"m_isYesPressed": false,
+				"m_isNoPressed": false
+			},
+			{
+				"name": "RunTest",
+				"commandId": 22,
+				"token": 101,
+				"tag": 0,
+				"m_isResetClock": true
 			}
 		]
 	}

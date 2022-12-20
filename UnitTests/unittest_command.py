@@ -110,7 +110,7 @@ class commands_TestCase(unittest.TestCase):
         com = m_getVersion_command.getVersion_command()
 
         com.command_token = self.token
-        com.command_id = m_message.COMMAND_ID["GetVersion"]
+        com.command_id = enums.COMMAND_ID["GetVersion"]
         com.to_bytes()
         self.assertEqual(self.get_version_buffer, com.command_array)
 
@@ -126,7 +126,7 @@ class commands_TestCase(unittest.TestCase):
         com = m_set_TCU_state.set_TCU_state_command()
 
         com.command_token = 0x5c1
-        com.command_id = m_message.COMMAND_ID["SetTcuState"]
+        com.command_id = enums.COMMAND_ID["SetTcuState"]
         com.m_state = enums.SystemState["RestMode"]
 
         com.to_bytes()
@@ -136,7 +136,7 @@ class commands_TestCase(unittest.TestCase):
         com = clear_command_buffer_command()
 
         com.command_token = 0x9FA
-        com.command_id = m_message.COMMAND_ID["ClearCommandBuffer"]
+        com.command_id = enums.COMMAND_ID["ClearCommandBuffer"]
         com.to_bytes()
         self.assertEqual(self.check_clear_buffer, com.command_array)
 
@@ -144,7 +144,7 @@ class commands_TestCase(unittest.TestCase):
         com = run_test_command()
 
         com.command_token = 0xA00
-        com.command_id = m_message.COMMAND_ID["RunTest"]
+        com.command_id = enums.COMMAND_ID["RunTest"]
         com.m_isResetClock = True
         com.to_bytes()
         self.assertEqual(self.check_run_test, com.command_array)
@@ -153,7 +153,7 @@ class commands_TestCase(unittest.TestCase):
         com = finite_ramp_by_time_command()
 
         com.command_token = 4565
-        com.command_id = m_message.COMMAND_ID["FiniteRampByTime"]
+        com.command_id = enums.COMMAND_ID["FiniteRampByTime"]
         com.m_temperature = 32
         com.m_time = 100
         com.m_isWaitForTrigger = False
@@ -174,7 +174,7 @@ class commands_TestCase(unittest.TestCase):
         com = stop_test_command()
 
         com.command_token = 3175
-        com.command_id = m_message.COMMAND_ID["StopTest"]
+        com.command_id = enums.COMMAND_ID["StopTest"]
         com.to_bytes()
         self.assertEqual(self.stop_test, com.command_array)
 
@@ -182,7 +182,7 @@ class commands_TestCase(unittest.TestCase):
         com = finite_ramp_by_temperature_command()
 
         com.command_token = 8868
-        com.command_id = m_message.COMMAND_ID["FiniteRampByTemperature"]
+        com.command_id = enums.COMMAND_ID["FiniteRampByTemperature"]
         com.m_temperature = 34
         com.m_time = 154
         com.m_isWaitForTrigger = False
@@ -202,7 +202,7 @@ class commands_TestCase(unittest.TestCase):
         com = end_test_command()
 
         com.command_token = 3560
-        com.command_id = m_message.COMMAND_ID["EndTest"]
+        com.command_id = enums.COMMAND_ID["EndTest"]
         com.to_bytes()
 
         self.assertEqual(self.end_test, com.command_array)
@@ -211,7 +211,7 @@ class commands_TestCase(unittest.TestCase):
         com = simulate_unit_response_command()
 
         com.command_token = 18569
-        com.command_id = m_message.COMMAND_ID["SimulateResponseUnit"]
+        com.command_id = enums.COMMAND_ID["SimulateResponseUnit"]
         com.m_isYesPressed = False
         com.m_isNoPressed = False
         com.to_bytes()
@@ -222,7 +222,7 @@ class commands_TestCase(unittest.TestCase):
         com = get_status_TCU_command()
 
         com.command_token = 18571
-        com.command_id = m_message.COMMAND_ID["GetStatusTCU"]
+        com.command_id = enums.COMMAND_ID["GetStatusTCU"]
         com.to_bytes()
 
         self.assertEqual(self.get_status_TCU, com.command_array)

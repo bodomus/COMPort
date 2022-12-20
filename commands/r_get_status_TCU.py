@@ -1,7 +1,7 @@
 import logging
 import enums
 from Utilities import temp_converter, converters
-from commands.m_message import COMMAND_ID
+from enums import COMMAND_ID
 from commands.r_get_pid_calculation_response import get_pid_calculation_response
 from commands.r_status import get_status_response
 
@@ -53,7 +53,7 @@ class get_statusTCU_response(get_status_response):
         self.m_chepsResponse = 0.0
         self.m_atsResponse = 0.0
         self.response = None
-        self.command_id = COMMAND_ID['GetStatusTCU']
+        self.command_id = COMMAND_ID.GetStatusTCU
 
         # bit 0 - main thermode enabled / disabled
         # bit 1 - ref thermode enabled / disabled
@@ -224,9 +224,11 @@ class get_statusTCU_response(get_status_response):
     def __str__(self):
         base = str(get_status_response.__str__(self))
         info = "{0}\nTimestamp: {1}\nCurrent thermode: {2}\nHeater temperatures count: {3}\n" \
-                "TEC temperatures count: {4}\nWater temperature: {5}\nCOVAS: {6}\nExternal Trigger: {7}\n" \
-                "External Trigger Timestamp: {8}\nRU Yes Timestamp: {9}\nRU No Timestamp: {10}".format(
-            base, self.m_timestamp, self.m_currentThermode, len(self.m_heaterTemperature),
-            len(self.m_tecTemperature), self.m_waterTemperature, self.m_covas, self.m_isExternalTriggerOn,
+               "TEC temperatures count: {4}\nWater temperature: {5}\nCOVAS: {6}\nExternal Trigger: {7}\n" \
+               "External Trigger Timestamp: {8}\nRU Yes Timestamp: {9}\nRU No Timestamp: {10}".format(
+            base, self.m_timestamp, self.m_currentThermode,
+            0 if self.m_heaterTemperature is None else len(self.m_heaterTemperature),
+            0 if self.m_tecTemperature is None else len(self.m_tecTemperature), self.m_waterTemperature,
+            self.m_covas, self.m_isExternalTriggerOn,
             self.m_externalTriggerTimestamp, "", "")
         return info

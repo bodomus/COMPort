@@ -17,8 +17,19 @@ class simulate_unit_response_command(command):
         self.response = None
         self.m_isYesPressed = False
         self.m_isNoPressed = False
-        self.command_id = m_message.COMMAND_ID['SimulateResponseUnit']
-        logger.info('%s COMMAND CREATE ', m_message.ID_TO_COMMAND[self.command_id])
+        self.command_id = enums.COMMAND_ID.SimulateResponseUnit
+        logger.info('%s COMMAND CREATE ', str(self.command_id))
+
+    def build_command(self, data):
+        """
+        build parameters from json file
+        :param data: instance of command from json file from him parameters
+        :return:
+        """
+        if 'm_isYesPressed' in data.keys():
+            self.m_isYesPressed = data['m_isYesPressed']
+        if 'm_isNoPressed' in data.keys():
+            self.m_isNoPressed = data['m_isNoPressed']
 
     def write_data(self):
         command.write_data(self)
@@ -32,6 +43,9 @@ class simulate_unit_response_command(command):
         return extra_data
 
     # Path: commands\m_run_test.py
+    def send_message(self):
+        # command.send_message(self)
+        logger.info(str(self))
+
     def __str__(self):
-        command.send_message()
-        logger.info(f'\tSimulateUnitResponse: was send to device')
+        return f'\t\n{command.__str__(self)}'

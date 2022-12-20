@@ -1,3 +1,4 @@
+import enums
 from commands import m_command, m_message
 import logging
 
@@ -11,5 +12,12 @@ class getVersion_command(command):
         # super(command, self).__init__()
         command.__init__(self)
         self.response = None
-        self.command_id = m_message.COMMAND_ID['GetVersion']
-        logger.info('%s COMMAND CREATE ', m_message.ID_TO_COMMAND[self.command_id])
+        self.command_id = enums.COMMAND_ID.GetVersion
+        logger.info('%s COMMAND CREATE ', str(self.command_id))
+
+    def send_message(self):
+        # command.send_message(self)
+        logger.info(f'\t{str(self)}')
+
+    def __str__(self):
+        return f'{command.__str__(self)}'

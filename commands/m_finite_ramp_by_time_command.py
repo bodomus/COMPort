@@ -1,9 +1,7 @@
 import logging
-
-from commands.m_command import command
+import enums
 from commands.m_finite_ramp_safe_duration_command import *
 from Utilities import temp_converter, converters
-from commands import m_message, m_command
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +12,41 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
     def __init__(self):
         finite_ramp_safe_duration_command.__init__(self)
         self.response = None
-        self.command_id = m_message.COMMAND_ID['FiniteRampByTime']
-        logging.info('%s COMMAND CREATE ', m_message.ID_TO_COMMAND[self.command_id])
+        self.command_id = enums.COMMAND_ID.FiniteRampByTime
+        logging.info('%s COMMAND CREATE ', str(self.command_id))
         self.m_isUseTimeMark = False
+
+    def build_command(self, data):
+        """
+        build parameters from json file
+        :param data: instance of command from json file from him parameters
+        :return:
+        """
+
+        if 'm_allowSafeDurationOffset' in data.keys():
+            self.m_allowSafeDurationOffset = data['m_allowSafeDurationOffset']
+        if 'm_isWaitForTrigger' in data.keys():
+            self.m_isWaitForTrigger = data['m_isWaitForTrigger']
+        if 'm_isPeakDetect' in data.keys():
+            self.m_isPeakDetect = data['m_isPeakDetect']
+        if 'm_isCreateTimeMark' in data.keys():
+            self.m_isCreateTimeMark = data['m_isCreateTimeMark']
+        if 'm_isUseTimeMark' in data.keys():
+            self.m_isUseTimeMark = data['m_isUseTimeMark']
+        if 'm_isDynamicFactor' in data.keys():
+            self.m_isDynamicFactor = data['m_isDynamicFactor']
+        if 'm_isAllowEmptyBuffer' in data.keys():
+            self.m_isAllowEmptyBuffer = data['m_isAllowEmptyBuffer']
+        if 'm_ignoreKdPidParameter' in data.keys():
+            self.m_ignoreKdPidParameter = data['m_ignoreKdPidParameter']
+        if 'm_isStopOnResponseUnitNo' in data.keys():
+            self.m_isStopOnResponseUnitNo = data['m_isStopOnResponseUnitNo']
+        if 'm_isStopOnResponseUnitYes' in data.keys():
+            self.m_isStopOnResponseUnitYes = data['m_isStopOnResponseUnitYes']
+        if 'm_temperature' in data.keys():
+            self.m_temperature = data['m_temperature']
+        if 'm_time' in data.keys():
+            self.m_time = data['m_time']
 
     def write_data(self):
         """
@@ -32,7 +62,7 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         # write temperature
         temp = converters.get_bytes16(temp_converter.pc2tcu(self.m_temperature))
         extra_data[position] = temp[1]
-        extra_data[position+1] = temp[0]
+        extra_data[position + 1] = temp[0]
         position += 2
         tok = converters.get_bytes32(self.m_time)
         extra_data[position] = tok[3]
@@ -51,13 +81,16 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         options_byte = converters.set_bit(options_byte, self.ALLOW_EMPTY_BUFFER_BIT, self.m_isAllowEmptyBuffer)
         options_byte = converters.set_bit(options_byte, self.IGNORE_KD_PID_PARAMETER_BIT, self.m_ignoreKdPidParameter)
         if self.m_allowSafeDurationOffset is not None:
-            options_byte = converters.set_bit(options_byte, self.ALLOW_SAFE_DURATION_OFFSET, self.m_allowSafeDurationOffset)
+            options_byte = converters.set_bit(options_byte, self.ALLOW_SAFE_DURATION_OFFSET,
+                                              self.m_allowSafeDurationOffset)
         extra_data[position] = options_byte
         position += 1
         # stop_condition_byte
         stop_condition_byte = 0
-        stop_condition_byte = converters.set_bit(stop_condition_byte, self.STOP_ON_YES_BIT, self.m_isStopOnResponseUnitYes)
-        stop_condition_byte = converters.set_bit(stop_condition_byte, self.STOP_ON_NO_BIT, self.m_isStopOnResponseUnitNo)
+        stop_condition_byte = converters.set_bit(stop_condition_byte, self.STOP_ON_YES_BIT,
+                                                 self.m_isStopOnResponseUnitYes)
+        stop_condition_byte = converters.set_bit(stop_condition_byte, self.STOP_ON_NO_BIT,
+                                                 self.m_isStopOnResponseUnitNo)
         extra_data[position] = stop_condition_byte
         position += 1
         # m_conditionEventsLength
@@ -66,7 +99,12 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
 
         return extra_data
 
+    def send_message(self):
+        # command.send_message(self)
+        logger.info(str(self))
+
     def __str__(self):
-        logger.info(f'\tfinite_ramp_by_time: was send to device')
-        logger.info(f'\t\t: {self.m_temperature}')
-        logger.info(f'\t\t: {self.m_time}')
+        return f'\t{command.__str__(self)}\nPARAMETERS:\t\t\t\t\t\tTEMPERATURE: {self.m_temperature}\n\t\t\t\t\t\t' \
+               f'\t\tTIME: {self.m_time} '
+
+

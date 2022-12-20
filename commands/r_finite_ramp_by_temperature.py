@@ -16,7 +16,6 @@ class finite_ramp_by_temperature_response(finite_ramp_safe_duration_command):
         self.m_low = None
 
     def read_data(self, buffer, start_position=0):
-
         count = response.read_data(buffer, start_position)
         temperature = converters.to_int_16(buffer, start_position)
         start_position += 2
@@ -25,11 +24,11 @@ class finite_ramp_by_temperature_response(finite_ramp_safe_duration_command):
         low = converters.to_int_16(buffer, start_position)
         start_position += 2
         self.m_low = temp_converter.tcu2pc(low)
-        
+
         high = converters.to_int_16(buffer, start_position)
         start_position += 2
         self.m_high = temp_converter.tcu2pc(high)
-        
+
         time = converters.to_uint_32(buffer, start_position)
         start_position += 4
         self.m_time = time
@@ -47,14 +46,16 @@ class finite_ramp_by_temperature_response(finite_ramp_safe_duration_command):
         start_position += 1
         self.m_isStopOnResponseUnitYes = converters.get_bit(stopConditionsByte, self.STOP_ON_YES_BIT)
         self.m_isStopOnResponseUnitNo = converters.get_bit(stopConditionsByte, self.STOP_ON_NO_BIT)
-        #TODO ConditionEventsCount = reader.ReadByte();
+        # TODO ConditionEventsCount = reader.ReadByte();
         self.m_condEventsNo = buffer[start_position]
         start_position += 1
 
-    def __str__(self):
-        response.response_message(self)
-        logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_isUseTimeMark}')
+    def response_message(self):
+        logger.info(str(self))
 
-    # def response_message(self):
-    #     response.response_message(self)
-    #     logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_temperature}')
+    def __str__(self):
+        base = str(response.__str__(self))
+        info = "{0}\nTimestamp: {1}\nHeater temperatures count: {2}\n" \
+               "Low margin: {3}\n High margin: {4}".format(base, self.m_time, self.m_temperature, self.m_low,
+                                                           self.m_high)
+        return info

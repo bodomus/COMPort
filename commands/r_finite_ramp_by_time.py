@@ -1,5 +1,7 @@
 from Utilities import converters, temp_converter
 from commands.m_finite_ramp_safe_duration_command import finite_ramp_safe_duration_command
+# from commands.m_finite_ramp_safe_duration_command import finite_ramp_safe_duration_command
+from commands.m_message import message
 from commands.response import response
 import logging
 
@@ -37,12 +39,32 @@ class finite_ramp_by_time_response(finite_ramp_safe_duration_command):
         start_position += 1
         self.m_isStopOnResponseUnitYes = converters.get_bit(stopConditionsByte, self.STOP_ON_YES_BIT)
         self.m_isStopOnResponseUnitNo = converters.get_bit(stopConditionsByte, self.STOP_ON_NO_BIT)
-        #TODO ConditionEventsCount = reader.ReadByte();
+        # TODO ConditionEventsCount = reader.ReadByte();
 
     def __str__(self):
-        response.response_message(self)
-        logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_isUseTimeMark}')
+        base = str(response.__str__(self))
 
-    # def response_message(self):
-    #     response.response_message(self)
-    #     logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_temperature}')
+        info = "{0}\nm_isWaitForTrigger: {1}\nm_isPeakDetect: {2}\n" \
+               "m_isCreateTimeMark: {3}\n" \
+               "m_isUseTimeMark: {4}\n" \
+               "m_isDynamicFactor: {5}\n" \
+               "m_isAllowEmptyBuffer: {6}\n" \
+               "m_ignoreKdPidParameter: {7}\n" \
+               "m_isStopOnResponseUnitYes: {8}\n" \
+               "m_isStopOnResponseUnitNo: {9}\n" \
+            .format(
+            base,
+            self.m_isWaitForTrigger,
+            self.m_isPeakDetect,
+            self.m_isCreateTimeMark,
+            self.m_isUseTimeMark,
+            self.m_isDynamicFactor,
+            self.m_isAllowEmptyBuffer,
+            self.m_ignoreKdPidParameter,
+            self.m_isStopOnResponseUnitYes,
+            self.m_isStopOnResponseUnitNo
+        )
+        return info
+
+    def response_message(self):
+        logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_temperature}')

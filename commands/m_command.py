@@ -1,8 +1,9 @@
 import crc8
 import logging
 from Utilities import converters
-from commands import m_message, r_get_version_command
+from commands import m_message
 import enums
+# from commands.r_finite_ramp_by_time import finite_ramp_by_time_response
 from commands.r_get_status_TCU import get_statusTCU_response
 from commands.r_get_version_command import get_version_response
 from commands.response import response
@@ -19,11 +20,6 @@ LENGTH_EXTRA_DATA_COMMAND = TAG_INDEX + 1
 ACK_CODE_INDEX = TAG_INDEX + 1
 EXTRA_DATA_RESPONSE_INDEX = ACK_CODE_INDEX + 1
 
-DEVICE_TAG = {
-    'Master': 0,
-    'Slave': 1
-}
-
 
 class command(m_message.message):
 
@@ -36,17 +32,17 @@ class command(m_message.message):
             create bytes from command
             :param command: object that need convert to bytes
         """
-        if self.command_id == m_message.COMMAND_ID['Undefined']:
+        if self.command_id == enums.COMMAND_ID.Undefined:
             raise ValueError("Invalid command id")
         array1 = [0x00] * m_message.MAX_LENGTH
-        array1[ID_INDEX] = self.command_id
+        array1[ID_INDEX] = self.command_id.value
         if self.command_token is not None:
             tok = converters.get_bytes32(self.command_token)
             array1[TOKEN_INDEX] = tok[3]
             array1[TOKEN_INDEX + 1] = tok[2]
             array1[TOKEN_INDEX + 2] = tok[1]
             array1[TOKEN_INDEX + 3] = tok[0]
-        array1[TAG_INDEX] = 0 if self.command_tag is None else self.command_tag
+        array1[TAG_INDEX] = 0 if self.command_tag is None else self.command_tag.value
         extra_data = self.write_data()
         write_len = len(extra_data)
         i = 0
@@ -71,10 +67,19 @@ class command(m_message.message):
         # copy to new array
 
     def send_message(self):
-        if self.command_id != m_message.COMMAND_ID['Undefined']:
-            logger.info(f'\tCommand {m_message.ID_TO_COMMAND[self.command_id]} was send to device')
-            logger.info(f'\tCommand token: {self.command_token}')
-            logger.info(f'\tWritten: {len(self.command_array)} bytes\n\n')
+        # if self.command_id != m_message.COMMAND_ID['Undefined']:
+        #     logger.info(f'\tCommand {m_message.ID_TO_COMMAND[self.command_id]} was send to device')
+        #     logger.info(f'\tCommand token: {self.command_token}')
+        #     logger.info(f'\tWritten: {len(self.command_array)} bytes\n\n')
+        pass
+
+    def build_command(self, data):
+        """
+        build parameters from json file
+        :param data: instance of command from json file from him parameters
+        :return:
+        """
+        pass
 
     def write_data(self):
         """
@@ -82,7 +87,6 @@ class command(m_message.message):
         :return: array of extra data
         """
         return []
-        # TODO need implementation in subclass
 
     def header_length_from_bytes(self, header):
         """
@@ -124,7 +128,7 @@ class command(m_message.message):
         if crc != crcCalculated:
             raise ValueError("Invalid crc code")
 
-        if self.command_id != buffer[ID_INDEX]:
+        if self.command_id.value != buffer[ID_INDEX]:
             raise ValueError("Invalid command id")
 
         # TODO create response command
@@ -139,17 +143,18 @@ class command(m_message.message):
             :Authors: bodomus@gmail.com
         """
         length = converters.to_uint_16(buffer, LENGTH_INDEX)
-        self.build_response(self.command_id)
-        self.response.command_id = buffer[ID_INDEX]
+        self.build_response(self.command_id.value)
+        self.response.command_id = enums.COMMAND_ID(buffer[ID_INDEX])
         self.response.command_token = converters.to_uint_32(buffer, TOKEN_INDEX)
-        self.response.command_tag = buffer[TAG_INDEX]
-        self.response.command_ack_code = buffer[ACK_CODE_INDEX]
-        if self.response.command_ack_code == enums.ACKCODE['Ok']:
+        self.response.command_tag = enums.DEVICE_TAG(buffer[TAG_INDEX])
+        self.response.command_ack_code = enums.ACKCODE(buffer[ACK_CODE_INDEX])
+        if self.response.command_ack_code == enums.ACKCODE.Ok:
             self.response.read_data(buffer, EXTRA_DATA_RESPONSE_INDEX)
 
     def build_response(self, command_id):
         """ """
-
+        if command_id == 19:  # get GetActiveThermode
+            self.response = response()
         if command_id == 33:  # get status TCU
             self.response = get_statusTCU_response()
         if command_id == 22:  # RunTest
@@ -159,10 +164,12 @@ class command(m_message.message):
         if command_id == 37:
             self.response = get_version_response()
         if command_id == 41:  # SetTcuState
-            # TODO need check return extra data
             self.response = response()
         if command_id == 47:  # StopTest
             self.response = response()
         if command_id == 25:  # EndTest
             self.response = response()
-
+        if command_id == 45:  # SimulateResponseUnit
+            self.response = response()
+        # if command_id == 28:  # FiniteRampBytime
+        #     self.response = finite_ramp_by_time_response()

@@ -1,9 +1,9 @@
 import logging
 
+import enums
 from commands.m_command import command
 from commands.m_finite_ramp_safe_duration_command import *
 from Utilities import temp_converter, converters
-from commands import m_message, m_command
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,37 @@ class finite_ramp_by_temperature_command(finite_ramp_safe_duration_command):
         self.m_lowMargin = 0
         self.m_highMargin = 0
         self.response = None
-        self.command_id = m_message.COMMAND_ID['FiniteRampByTemperature']
-        logging.info('%s COMMAND CREATE ', m_message.ID_TO_COMMAND[self.command_id])
+        self.command_id = enums.COMMAND_ID.FiniteRampByTemperature
+        logging.info('%s COMMAND CREATE ', str(self.command_id))
+
+    def build_command(self, data):
+        """
+        build parameters from json file
+        :param data: instance of command from json file from him parameters
+        :return:
+        """
+        if 'm_allowSafeDurationOffset' in data.keys():
+            self.m_allowSafeDurationOffset = data['m_allowSafeDurationOffset']
+        if 'm_isWaitForTrigger' in data.keys():
+            self.m_isWaitForTrigger = data['m_isWaitForTrigger']
+        if 'm_isPeakDetect' in data.keys():
+            self.m_isPeakDetect = data['m_isPeakDetect']
+        if 'm_isCreateTimeMark' in data.keys():
+            self.m_isCreateTimeMark = data['m_isCreateTimeMark']
+        if 'm_isDynamicFactor' in data.keys():
+            self.m_isDynamicFactor = data['m_isDynamicFactor']
+        if 'm_isAllowEmptyBuffer' in data.keys():
+            self.m_isAllowEmptyBuffer = data['m_isAllowEmptyBuffer']
+        if 'm_ignoreKdPidParameter' in data.keys():
+            self.m_ignoreKdPidParameter = data['m_ignoreKdPidParameter']
+        if 'm_isStopOnResponseUnitNo' in data.keys():
+            self.m_isStopOnResponseUnitNo = data['m_isStopOnResponseUnitNo']
+        if 'm_isStopOnResponseUnitYes' in data.keys():
+            self.m_isStopOnResponseUnitYes = data['m_isStopOnResponseUnitYes']
+        if 'm_temperature' in data.keys():
+            self.m_temperature = data['m_temperature']
+        if 'm_time' in data.keys():
+            self.m_time = data['m_time']
 
     def write_data(self):
         """
@@ -77,7 +106,10 @@ class finite_ramp_by_temperature_command(finite_ramp_safe_duration_command):
 
         return extra_data
 
+    def send_message(self):
+        # command.send_message(self)
+        logger.info(str(self))
+
     def __str__(self):
-        logger.info(f'\tfinite_ramp_by_temperature: was send to device')
-        logger.info(f'\t\t: {self.m_temperature}')
-        logger.info(f'\t\t: {self.m_time}')
+        return f'\t\n{command.__str__(self)}\n\t\tTEMPERATURE: {self.m_temperature}\n\t\tTIME: {self.m_time}'
+

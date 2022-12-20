@@ -1,7 +1,7 @@
-from commands import m_command
+from commands.m_command import command
 
 
-class temperature_command(m_command.command):
+class temperature_command(command):
     MAX_EVENTS_NO = 255
     WAIT_TRIGGER_BIT = 0
     PEAK_DETECT_BIT = 1
@@ -13,7 +13,7 @@ class temperature_command(m_command.command):
     ALLOW_SAFE_DURATION_OFFSET = 3
 
     def __init__(self):
-        m_command.command.__init__(self)
+        command.__init__(self)
         #from temperuture command
         self.m_isWaitForTrigger = False
         self.m_isAllowEmptyBuffer = True
