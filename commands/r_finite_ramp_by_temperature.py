@@ -1,19 +1,28 @@
 from Utilities import converters, temp_converter
-from commands import m_command
-from commands.m_finite_ramp_safe_duration_command import finite_ramp_safe_duration_command
+from commands.m_message import message
 from commands.response import response
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class finite_ramp_by_temperature_response(finite_ramp_safe_duration_command):
+class finite_ramp_by_temperature_response(response):
     USE_TIME_MARK_BIT = 3
 
     def __init__(self):
-        finite_ramp_safe_duration_command.__init__(self)
+        # finite_ramp_safe_duration_command.__init__(self)
+        self.m_isStopOnResponseUnitNo = None
+        self.m_isStopOnResponseUnitYes = None
+        self.m_ignoreKdPidParameter = None
+        self.m_isAllowEmptyBuffer = None
+        self.m_isDynamicFactor = None
+        self.m_isCreateTimeMark = None
+        self.m_isWaitForTrigger = None
+        self.m_time = None
         self.m_high = None
         self.m_low = None
+        self.m_temperature = 0
+        self.m_isPeakDetect = None
 
     def read_data(self, buffer, start_position=0):
         count = response.read_data(buffer, start_position)
@@ -50,12 +59,20 @@ class finite_ramp_by_temperature_response(finite_ramp_safe_duration_command):
         self.m_condEventsNo = buffer[start_position]
         start_position += 1
 
-    def response_message(self):
-        logger.info(str(self))
-
     def __str__(self):
-        base = str(response.__str__(self))
-        info = "{0}\nTimestamp: {1}\nHeater temperatures count: {2}\n" \
-               "Low margin: {3}\n High margin: {4}".format(base, self.m_time, self.m_temperature, self.m_low,
-                                                           self.m_high)
-        return info
+        base = str(message.__str__(self))
+        return f"RESPONSE::: {message.__str__(self)} ack code {str(self.command_ack_code)} \n\t\t\t\t\t\t\t" \
+               f"temperature: {self.m_temperature}\n\t\t\t\t\t\t\t\t" \
+               f"m_low: {self.m_low}\n\t\t\t\t\t\t\t\t" \
+               f"m_high: {self.m_high}\n\t\t\t\t\t\t\t\t" \
+               f"m_isWaitForTrigger: {self.m_isWaitForTrigger}\n\t\t\t\t\t\t\t\t" \
+               f"m_isPeakDetect: {self.m_isPeakDetect}\n\t\t\t\t\t\t\t\t" \
+               f"m_isCreateTimeMark: {self.m_isCreateTimeMark}\n\t\t\t\t\t\t\t\t" \
+               f"m_isDynamicFactor: {self.m_isDynamicFactor}\n\t\t\t\t\t\t\t\t" \
+               f"m_isAllowEmptyBuffer: {self.m_isAllowEmptyBuffer}\n\t\t\t\t\t\t\t\t" \
+               f"m_ignoreKdPidParameter: {self.m_ignoreKdPidParameter}\n\t\t\t\t\t\t\t\t" \
+               f"m_isStopOnResponseUnitYes: {self.m_isStopOnResponseUnitYes}\n\t\t\t\t\t\t\t\t" \
+               f"m_isStopOnResponseUnitNo: {self.m_isStopOnResponseUnitNo}\n\t\t\t\t\t\t\t\t"
+
+    def response_message(self):
+        logger.info(f'{str(self)}\n')

@@ -1,6 +1,4 @@
 from Utilities import converters, temp_converter
-from commands.m_finite_ramp_safe_duration_command import finite_ramp_safe_duration_command
-# from commands.m_finite_ramp_safe_duration_command import finite_ramp_safe_duration_command
 from commands.m_message import message
 from commands.response import response
 import logging
@@ -8,12 +6,23 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class finite_ramp_by_time_response(finite_ramp_safe_duration_command):
+class finite_ramp_by_time_response(response):
     USE_TIME_MARK_BIT = 3
 
     def __init__(self):
-        finite_ramp_safe_duration_command.__init__(self)
+        # finite_ramp_safe_duration_command.__init__(self)
+        self.m_temperature = 0
+        self.m_time = 0
         self.m_isUseTimeMark = False
+        self.m_isWaitForTrigger = False
+        self.m_isPeakDetect = False
+        self.m_isCreateTimeMark = False
+        self.m_isUseTimeMark = False
+        self.m_isDynamicFactor = False
+        self.m_isAllowEmptyBuffer = None
+        self.m_ignoreKdPidParameter = False
+        self.m_isStopOnResponseUnitYes = False
+        self.m_isStopOnResponseUnitNo = False
 
     def read_data(self, buffer, start_position=0):
         count = response.read_data(buffer, start_position)
@@ -42,29 +51,17 @@ class finite_ramp_by_time_response(finite_ramp_safe_duration_command):
         # TODO ConditionEventsCount = reader.ReadByte();
 
     def __str__(self):
-        base = str(response.__str__(self))
-
-        info = "{0}\nm_isWaitForTrigger: {1}\nm_isPeakDetect: {2}\n" \
-               "m_isCreateTimeMark: {3}\n" \
-               "m_isUseTimeMark: {4}\n" \
-               "m_isDynamicFactor: {5}\n" \
-               "m_isAllowEmptyBuffer: {6}\n" \
-               "m_ignoreKdPidParameter: {7}\n" \
-               "m_isStopOnResponseUnitYes: {8}\n" \
-               "m_isStopOnResponseUnitNo: {9}\n" \
-            .format(
-            base,
-            self.m_isWaitForTrigger,
-            self.m_isPeakDetect,
-            self.m_isCreateTimeMark,
-            self.m_isUseTimeMark,
-            self.m_isDynamicFactor,
-            self.m_isAllowEmptyBuffer,
-            self.m_ignoreKdPidParameter,
-            self.m_isStopOnResponseUnitYes,
-            self.m_isStopOnResponseUnitNo
-        )
-        return info
+        base = str(message.__str__(self))
+        return f"RESPONSE::: {message.__str__(self)} ack code {str(self.command_ack_code)} \n\t\t\t\t\t\t\t" \
+               f"m_isWaitForTrigger: {self.m_isWaitForTrigger}\n\t\t\t\t\t\t\t\t" \
+               f"m_isPeakDetect: {self.m_isPeakDetect}\n\t\t\t\t\t\t\t\t" \
+               f"m_isCreateTimeMark: {self.m_isCreateTimeMark}\n\t\t\t\t\t\t\t\t" \
+               f"m_isUseTimeMark: {self.m_isUseTimeMark}\n\t\t\t\t\t\t\t\t" \
+               f"m_isDynamicFactor: {self.m_isDynamicFactor}\n\t\t\t\t\t\t\t\t" \
+               f"m_isAllowEmptyBuffer: {self.m_isAllowEmptyBuffer}\n\t\t\t\t\t\t\t\t" \
+               f"m_ignoreKdPidParameter: {self.m_ignoreKdPidParameter}\n\t\t\t\t\t\t\t\t" \
+               f"m_isStopOnResponseUnitYes: {self.m_isStopOnResponseUnitYes}\n\t\t\t\t\t\t\t\t" \
+               f"m_isStopOnResponseUnitNo: {self.m_isStopOnResponseUnitNo}\n\t\t\t\t\t\t\t\t"
 
     def response_message(self):
-        logger.info(f'Response finite_ramp_by_time_response from device:::version {self.m_temperature}')
+        logger.info(f'{str(self)}\n')

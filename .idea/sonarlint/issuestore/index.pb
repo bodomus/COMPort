@@ -27,5 +27,3 @@ A
 crc8.py,b\4\b44590a38c0467bfc903666f6da7e3250a68452d
 D
 commands/r_status.py,e\c\ec329070e2fbde1ca6b7c13e52fbe3594da6dfaf
-@
-preferences.json,f\9\f9e104df57c18bd5c15bb225f9ac17bbb6a66339

@@ -125,6 +125,7 @@ class COMMAND_ID(Enum):
     SimulateResponseUnit = 45
     StopTest = 47
     GetCurrentPID = 70
+    EnableThermode = 83
     FiniteRampByRate = 85
 
     def __str__(self):

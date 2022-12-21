@@ -1,13 +1,13 @@
 	{
 		"Commands": [
 			{
-				"name": "SetTcuState",
+				"name": "EnableThermode",
 				"crc": 0,
-				"commandId": 41,
+				"commandId": 83,
 				"token": 100,
 				"tag": 0,
-				"m_state": 1,
-				"m_runSelfTest": true
+				"m_isEnabled": true,
+				"m_thermodeType": 1
 			},
 			{
 				"name": "GetVersion",

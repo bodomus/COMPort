@@ -3,6 +3,7 @@ from datetime import datetime
 import enums
 from commands import m_command
 from commands.m_clear_command_buffer import clear_command_buffer_command
+from commands.m_enable_termode import enable_termode_command
 from commands.m_finite_ramp_by_temperature_command import finite_ramp_by_temperature_command
 from commands.m_finite_ramp_by_time_command import finite_ramp_by_time_command
 from commands.m_get_active_thermode import get_active_thermode_command
@@ -74,6 +75,8 @@ class app:
             command = finite_ramp_by_temperature_command()
         if command_id == enums.COMMAND_ID.SimulateResponseUnit.value:
             command = simulate_unit_response_command()
+        if command_id == enums.COMMAND_ID.EnableThermode.value:
+            command = enable_termode_command()
 
         command.build_command(data)
         command.command_token = token
@@ -93,11 +96,14 @@ class app:
             #     self.current_time = t
             #     com = self.get_status_tcu(self.token)
             # else:
+            if len(self.input_commands.commands) == current_command_index:
+                logger.info("Complete")
+                exit(0)
             data = self.input_commands.commands[current_command_index]
             com = self.command_builder(data["commandId"], self.token, data)
             current_command_index += 1
 
-
+            time.sleep(1)
             if not self.ser.is_open:
                 self.ser.open()
 
@@ -108,15 +114,15 @@ class app:
             header = self.ser.read(4)
             command_length = com.header_length_from_bytes(header)
             while self.ser.in_waiting:
-                data = self.ser.readline()
+                data = self.ser.read(command_length)
                 com.receive_response(header, data)
                 com.response.response_message()
 
 
-            # self.ser.close()
-            #
-            # if not self.ser.is_open:
-            #     print('port close')
+            self.ser.close()
+
+            if not self.ser.is_open:
+                print('port close')
 
 
 def creator():
