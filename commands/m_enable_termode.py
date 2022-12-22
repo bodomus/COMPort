@@ -14,7 +14,6 @@ class enable_termode_command(command):
         self.m_isEnabled = True
         self.m_thermodeType = enums.ThermodeType.TSA
         self.command_id = enums.COMMAND_ID.EnableThermode
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def build_command(self, data):
         """

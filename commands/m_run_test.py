@@ -13,7 +13,6 @@ class run_test_command(command):
         self.response = None
         self.m_isResetClock = True
         self.command_id = enums.COMMAND_ID.RunTest
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def build_command(self, data):
         """

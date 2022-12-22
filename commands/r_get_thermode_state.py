@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class get_version_response(response):
+class get_thermode_state_response(response):
     def __init__(self):
         response.__init__(self)
         self.m_version = None
@@ -21,5 +21,4 @@ class get_version_response(response):
     def __str__(self):
         base = message.__str__(self)
         return f'RESPONSE::: {message.__str__(self)} ack code {str(self.command_ack_code)} \n\t\t\t\t\t\t\t ' \
-               f'Version: {self.m_version}\n '
-
+               f'GetVersion: {self.m_version}\n '

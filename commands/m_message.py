@@ -15,4 +15,4 @@ class message:
         command = str(self.command_id)
         tag = str(self.command_tag)
 
-        return f"TOKEN: {self.command_token} TAG: {tag}"
+        return f"COMMAND: {command} TOKEN: {self.command_token} TAG: {tag}"

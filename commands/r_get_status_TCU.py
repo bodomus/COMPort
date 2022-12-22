@@ -1,6 +1,7 @@
 import logging
 import enums
 from Utilities import temp_converter, converters
+from commands.m_message import message
 from enums import COMMAND_ID
 from commands.r_get_pid_calculation_response import get_pid_calculation_response
 from commands.r_status import get_status_response
@@ -94,7 +95,9 @@ class get_statusTCU_response(get_status_response):
         m_system_status_byte = buffer[start_position]
         start_position += 1
         self.m_systemState = m_system_status_byte & self.SYSTEM_STATE_MASK
-        self.m_isWaitForTrigger = converters.get_bit(m_system_status_byte, self.SYSTEM_STATUS_BIT_ERROR)
+        self.m_isWaitForTrigger = converters.get_bit(m_system_status_byte, self.SYSTEM_STATUS_BIT_WAIT_FOR_TRIGGER)
+        self.m_currentThermode = converters.get_bit(m_system_status_byte, self.SYSTEM_STATUS_BIT_CURRENT_THERMODE1)
+        self.m_isError = converters.get_bit(m_system_status_byte, self.SYSTEM_STATUS_BIT_ERROR)
         self.m_covas = buffer[start_position]
         start_position += 1
         ioStateByte = buffer[start_position]
@@ -221,14 +224,25 @@ class get_statusTCU_response(get_status_response):
         start_position += 1
         return start_position - current_position
 
+    def get_state(self):
+        return self.m_systemState
+
+    def response_message(self):
+        logger.info(f'{str(self)}')
+
     def __str__(self):
-        base = str(get_status_response.__str__(self))
-        info = "{0}\nTimestamp: {1}\nCurrent thermode: {2}\nHeater temperatures count: {3}\n" \
-               "TEC temperatures count: {4}\nWater temperature: {5}\nCOVAS: {6}\nExternal Trigger: {7}\n" \
-               "External Trigger Timestamp: {8}\nRU Yes Timestamp: {9}\nRU No Timestamp: {10}".format(
-            base, self.m_timestamp, self.m_currentThermode,
-            0 if self.m_heaterTemperature is None else len(self.m_heaterTemperature),
-            0 if self.m_tecTemperature is None else len(self.m_tecTemperature), self.m_waterTemperature,
-            self.m_covas, self.m_isExternalTriggerOn,
-            self.m_externalTriggerTimestamp, "", "")
+        base = str(message.__str__(self))
+        tec_temperature = 0 if self.m_tecTemperature is None else len(self.m_tecTemperature)
+        heater_temperature = 0 if self.m_heaterTemperature is None else len(self.m_heaterTemperature)
+        system_state = enums.SystemState(self.m_systemState)
+        info = f"RESPONSE::: {base}\n\t\t\t\t\t\t\t Timestamp: {self.m_timestamp}" \
+               f"\n\t\t\t\t\t\t\t Current thermode: {self.m_currentThermode}" \
+               f"\n\t\t\t\t\t\t\t TCU state:{str(system_state)}" \
+               f"\n\t\t\t\t\t\t\t Heater temperatures count: {heater_temperature}" \
+               f"\n\t\t\t\t\t\t\t TEC temperatures count: {tec_temperature}" \
+               f"\n\t\t\t\t\t\t\t Water temperature: {self.m_waterTemperature}" \
+               f"\n\t\t\t\t\t\t\t COVAS: {self.m_covas}" \
+               f"\n\t\t\t\t\t\t\t External Trigger: {self.m_isExternalTriggerOn}" \
+               f"\n\t\t\t\t\t\t\t External Trigger Timestamp: {self.m_externalTriggerTimestamp}" \
+               f"\n\t\t\t\t\t\t\t Is_Error: {self.m_isError}\n "
         return info

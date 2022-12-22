@@ -18,7 +18,6 @@ class simulate_unit_response_command(command):
         self.m_isYesPressed = False
         self.m_isNoPressed = False
         self.command_id = enums.COMMAND_ID.SimulateResponseUnit
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def build_command(self, data):
         """

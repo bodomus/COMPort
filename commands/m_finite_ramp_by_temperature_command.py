@@ -16,7 +16,6 @@ class finite_ramp_by_temperature_command(finite_ramp_safe_duration_command):
         self.m_highMargin = 0
         self.response = None
         self.command_id = enums.COMMAND_ID.FiniteRampByTemperature
-        logging.info('%s COMMAND CREATE ', str(self.command_id))
 
     def build_command(self, data):
         """

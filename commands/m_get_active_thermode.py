@@ -13,7 +13,6 @@ class get_active_thermode_command(command):
         self.m_thermodeId = 0
         self.response = None
         self.command_id = enums.COMMAND_ID.GetActiveThermode
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def write_data(self):
         command.write_data(self)

@@ -13,11 +13,10 @@ class get_status_TCU_command(m_command.command):
         m_command.command.__init__(self)
         self.response = None
         self.command_id = enums.COMMAND_ID.GetStatusTCU
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def send_message(self):
         # command.send_message(self)
         logger.info(str(self))
 
     def __str__(self):
-        return f'\t\n{command.__str__(self)}'
+        return f'\t{command.__str__(self)}'

@@ -5,6 +5,7 @@ from commands import m_message
 import enums
 from commands.r_finite_ramp_by_temperature import finite_ramp_by_temperature_response
 from commands.r_finite_ramp_by_time import finite_ramp_by_time_response
+from commands.r_get_errors_command import get_errors_response
 # from commands.r_finite_ramp_by_time import finite_ramp_by_time_response
 from commands.r_get_status_TCU import get_statusTCU_response
 from commands.r_get_version_command import get_version_response
@@ -157,25 +158,29 @@ class command(m_message.message):
         """ """
         if command_id == 19:  # get GetActiveThermode
             self.response = response()
-        if command_id == 33:  # get status TCU
-            self.response = get_statusTCU_response()
         if command_id == 22:  # RunTest
-            self.response = response()
-        if command_id == 27:  # ClearCommandBuffer
-            self.response = response()
-        if command_id == 37:
-            self.response = get_version_response()
-        if command_id == 41:  # SetTcuState
-            self.response = response()
-        if command_id == 47:  # StopTest
             self.response = response()
         if command_id == 25:  # EndTest
             self.response = response()
-        if command_id == 45:  # SimulateResponseUnit
+        if command_id == 27:  # ClearCommandBuffer
             self.response = response()
         if command_id == 28:  # FiniteRampBytime
             self.response = finite_ramp_by_time_response()
         if command_id == 29:  # FiniteRampBytemperature
             self.response = finite_ramp_by_temperature_response()
+        if command_id == 33:  # get status TCU
+            self.response = get_statusTCU_response()
+        if command_id == 35:  # GetErrors
+            self.response = get_errors_response()
+        if command_id == 36:  # EraseErrors
+            self.response = response()
+        if command_id == 37:
+            self.response = get_version_response()
+        if command_id == 41:  # SetTcuState
+            self.response = response()
+        if command_id == 45:  # SimulateResponseUnit
+            self.response = response()
+        if command_id == 47:  # StopTest
+            self.response = response()
         if command_id == 83:  # enable termode
             self.response = response()

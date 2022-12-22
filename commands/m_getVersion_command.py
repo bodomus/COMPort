@@ -13,7 +13,6 @@ class getVersion_command(command):
         command.__init__(self)
         self.response = None
         self.command_id = enums.COMMAND_ID.GetVersion
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def send_message(self):
         # command.send_message(self)

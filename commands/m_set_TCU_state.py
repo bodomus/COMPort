@@ -14,7 +14,6 @@ class set_TCU_state_command(command):
         self.m_runSelfTest = True
         self.response = None
         self.command_id = enums.COMMAND_ID.SetTcuState
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def write_data(self):
         command.write_data(self)
@@ -41,4 +40,4 @@ class set_TCU_state_command(command):
 
     def __str__(self):
         return f'\t{command.__str__(self)}\nPARAMETERS\t\t\t\t\t\tm_runSelfTest = {self.m_runSelfTest}\n\t\t\t\t\t\t\t' \
-               f'\tm_state = {str(self.m_state)}\n '
+               f'\tm_state = {str(self.m_state)}'

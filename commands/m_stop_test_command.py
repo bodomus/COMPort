@@ -13,7 +13,6 @@ class stop_test_command(command):
         command.__init__(self)
         self.response = None
         self.command_id = enums.COMMAND_ID.StopTest
-        logger.info('%s COMMAND CREATE ', str(self.command_id))
 
     def write_data(self):
         command.write_data(self)

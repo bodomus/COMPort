@@ -5,12 +5,10 @@ from commands.m_command import command
 logger = logging.getLogger(__name__)
 
 
-# TODO Need Testing
-class clear_command_buffer_command(command):
+class erase_error_command(command):
     def __init__(self):
         command.__init__(self)
-        self.response = None
-        self.command_id = enums.COMMAND_ID.ClearCommandBuffer
+        self.command_id = enums.COMMAND_ID.EraseErrors
 
     def write_data(self):
         return command.write_data(self)

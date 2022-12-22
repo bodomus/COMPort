@@ -1,63 +1,94 @@
 	{
 		"Commands": [
 			{
-				"name": "EnableThermode",
-				"crc": 0,
-				"commandId": 83,
-				"token": 100,
-				"tag": 0,
-				"m_isEnabled": true,
-				"m_thermodeType": 1
-			},
-			{
-				"name": "GetVersion",
-				"crc": 0,
-				"commandId": 37,
-				"token": 100,
-				"tag": 0
+				"name": "GetStatusTCU",
+				"commandId": 33
 			},
 			{
 				"name": "SetTcuState",
 				"commandId": 41,
-				"token": 101,
-				"tag": 0,
+				"m_state": 0,
+				"m_runSelfTest": false
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
+				"name": "GetVersion",
+				"commandId": 37
+			},
+			{
+				"name": "SetTcuState",
+				"commandId": 41,
+				"m_state": 1,
+				"m_runSelfTest": true
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
+				"name": "SetTcuState",
+				"commandId": 41,
 				"m_state": 2,
 				"m_runSelfTest": true
 			},
 			{
-				"name": "GetActiveThermode",
-				"commandId": 19,
-				"token": 101,
-				"tag": 0,
-				"m_thermodeId": 0
+				"name": "GetStatusTCU",
+				"commandId": 33
 			},
 			{
 				"name": "SetTcuState",
 				"commandId": 41,
-				"token": 101,
-				"tag": 0,
+				"m_state": 2,
+				"m_runSelfTest": true
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
+				"name": "SetTcuState",
+				"commandId": 41,
+				"m_state": 2,
+				"m_runSelfTest": true
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
+				"name": "GetActiveThermode",
+				"commandId": 19,
+				"m_thermodeId": 0
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
+				"name": "SetTcuState",
+				"commandId": 41,
 				"m_state": 3,
 				"m_runSelfTest": true
 			},
 			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
 				"name": "ClearCommandBuffer",
-				"commandId": 27,
-				"token": 101,
-				"tag": 0
+				"commandId": 27
 			},
 			{
 				"name": "RunTest",
 				"commandId": 22,
-				"token": 101,
-				"tag": 0,
 				"m_isResetClock": true
 			},
 			{
-				"crc": 0,
 				"commandId": 28,
 				"name": "FiniteRampByTime",
-				"token": 469,
-				"tag": 0,
 				"m_allowSafeDurationOffset": false,
 				"m_isWaitForTrigger": false,
 				"m_isPeakDetect": false,
@@ -72,15 +103,10 @@
 				"m_time": 100
 			},{
 				"name": "StopTest",
-				"commandId": 47,
-				"token": 101,
-				"tag": 0
+				"commandId": 47
 			},{
-				"crc": 0,
 				"commandId": 29,
 				"name": "FiniteRampByTemperature",
-				"token": 469,
-				"tag": 0,
 				"m_allowSafeDurationOffset": false,
 				"m_isWaitForTrigger": false,
 				"m_isPeakDetect": false,
@@ -93,11 +119,8 @@
 				"m_temperature": 32,
 				"m_time": 100
 			},{
-				"crc": 0,
 				"commandId": 28,
 				"name": "FiniteRampByTime",
-				"token": 469,
-				"tag": 0,
 				"m_allowSafeDurationOffset": false,
 				"m_isWaitForTrigger": false,
 				"m_isPeakDetect": false,
@@ -112,22 +135,16 @@
 				"m_time": 100
 			},{
 				"name": "EndTest",
-				"commandId": 25,
-				"token": 101,
-				"tag": 0
+				"commandId": 25
 			},{
 				"name": "SimulateResponseUnit",
 				"commandId": 45,
-				"token": 101,
-				"tag": 0,
 				"m_isYesPressed": false,
 				"m_isNoPressed": false
 			},
 			{
 				"name": "RunTest",
 				"commandId": 22,
-				"token": 101,
-				"tag": 0,
 				"m_isResetClock": true
 			}
 		]

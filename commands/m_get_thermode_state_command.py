@@ -7,25 +7,16 @@ from commands.m_command import command
 logger = logging.getLogger(__name__)
 
 
-class end_test_command(command):
+class get_thermode_state_command(command):
     def __init__(self):
+        # super(command, self).__init__()
         command.__init__(self)
         self.response = None
-        self.command_id = enums.COMMAND_ID.EndTest
-
-
-    def write_data(self):
-        command.write_data(self)
-
-        return []
+        self.command_id = enums.COMMAND_ID.GetThermodeState
 
     def send_message(self):
         # command.send_message(self)
-        logger.info(str(self))
+        logger.info(f'\t{str(self)}')
 
     def __str__(self):
-        return f'\t\n{command.__str__(self)}'
-
-
-
-
+        return f'{command.__str__(self)}'

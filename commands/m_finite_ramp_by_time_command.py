@@ -13,7 +13,6 @@ class finite_ramp_by_time_command(finite_ramp_safe_duration_command):
         finite_ramp_safe_duration_command.__init__(self)
         self.response = None
         self.command_id = enums.COMMAND_ID.FiniteRampByTime
-        logging.info('%s COMMAND CREATE ', str(self.command_id))
         self.m_isUseTimeMark = False
 
     def build_command(self, data):
