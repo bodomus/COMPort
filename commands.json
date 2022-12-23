@@ -5,26 +5,16 @@
 				"commandId": 33
 			},
 			{
-				"name": "SetTcuState",
-				"commandId": 41,
-				"m_state": 0,
-				"m_runSelfTest": false
-			},
-			{
-				"name": "GetStatusTCU",
-				"commandId": 33
+				"name": "EnableTermode",
+				"commandId": 83,
+				"m_thermodeType": 1,
+				"m_isEnabled": true
 			},
 			{
 				"name": "GetVersion",
 				"commandId": 37
 			},
 			{
-				"name": "SetTcuState",
-				"commandId": 41,
-				"m_state": 1,
-				"m_runSelfTest": true
-			},
-			{
 				"name": "GetStatusTCU",
 				"commandId": 33
 			},
@@ -47,12 +37,6 @@
 			{
 				"name": "GetStatusTCU",
 				"commandId": 33
-			},
-			{
-				"name": "SetTcuState",
-				"commandId": 41,
-				"m_state": 2,
-				"m_runSelfTest": true
 			},
 			{
 				"name": "GetStatusTCU",

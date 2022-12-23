@@ -27,7 +27,7 @@ class connector:
         data = self.read_comport_preferences(path_to_preferences)
         if data is None:
             return serial.Serial(
-                port='COM3',
+                port='COM5',
                 baudrate=9600,
                 timeout=0.5,
                 writeTimeout=0.5

@@ -110,5 +110,9 @@ class finite_ramp_by_temperature_command(finite_ramp_safe_duration_command):
         logger.info(str(self))
 
     def __str__(self):
-        return f'\t\n{command.__str__(self)}\n\t\tTEMPERATURE: {self.m_temperature}\n\t\tTIME: {self.m_time}'
+        return f'\t{command.__str__(self)}\nPARAMETERS:\t\t\t\t\t\tTEMPERATURE: {self.m_temperature}\n\t\t\t\t\t\t' \
+               f'\t\tTIME: {self.m_time} \n\t\t\t\t\t\t\t\t m_lowMargin: {self.m_lowMargin} \n\t\t\t\t\t\t\t\t ' \
+               f'm_highMargin: {self.m_highMargin} '
+
+
 

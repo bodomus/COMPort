@@ -105,6 +105,8 @@ class app:
             command = get_errors_command()
         if command_id == enums.COMMAND_ID.EraseErrors.value:
             command = erase_error_command()
+        if command_id == enums.COMMAND_ID.EnableThermode.value:
+            command = enable_termode_command()
 
         command.build_command(data)
         command.command_token = token
@@ -134,11 +136,14 @@ class app:
 
                 if not self.ser.is_open:
                     self.ser.open()
-                self.ser.reset_input_buffer()
-                self.ser.reset_output_buffer()
-                time.sleep(0.5)
+                # self.ser.reset_input_buffer()
+                # self.ser.reset_output_buffer()
+                # time.sleep(0.5)
                 send_length = self.ser.write(com.command_array)
                 self.ser.flush()
+
+                # while self.ser.in_waiting:
+                #     data = self.ser.read(command_length)
 
                 header = self.ser.read(4)
                 command_length = com.header_length_from_bytes(header)
@@ -147,7 +152,7 @@ class app:
                     com.receive_response(header, data)
                     com.response.response_message()
                     if com.command_id == enums.COMMAND_ID.GetStatusTCU and self.waiting_self_test:
-                        time.sleep(12)
+                        time.sleep(.5)
                         if com.response.get_state() != enums.SystemState.RestMode:
                             self.input_commands.commands.insert(current_command_index, {"commandId": enums.COMMAND_ID.GetStatusTCU.value})
                             logger.info("Repeat get status TCU")
@@ -164,8 +169,7 @@ class app:
                 self.current_time = t
 
                 self.ser.close()
-        except Exception as e:
-            logger.error('Failed: ' + str(e))
+        #
         finally:
             self.finalize()
 

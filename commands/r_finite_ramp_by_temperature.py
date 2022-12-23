@@ -23,6 +23,8 @@ class finite_ramp_by_temperature_response(response):
         self.m_low = None
         self.m_temperature = 0
         self.m_isPeakDetect = None
+        self.m_temperature = None
+        self.m_condEventsNo = None
 
     def read_data(self, buffer, start_position=0):
         count = response.read_data(buffer, start_position)
@@ -60,7 +62,6 @@ class finite_ramp_by_temperature_response(response):
         start_position += 1
 
     def __str__(self):
-        base = str(message.__str__(self))
         return f"RESPONSE::: {message.__str__(self)} ack code {str(self.command_ack_code)} \n\t\t\t\t\t\t\t" \
                f"temperature: {self.m_temperature}\n\t\t\t\t\t\t\t\t" \
                f"m_low: {self.m_low}\n\t\t\t\t\t\t\t\t" \

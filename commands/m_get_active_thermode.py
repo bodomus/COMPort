@@ -32,7 +32,7 @@ class get_active_thermode_command(command):
 
     def send_message(self):
         # command.send_message(self)
-        logger.info(f'{str(self)}')
+        logger.info(f'{str(self)}\n')
 
     def __str__(self):
         return f'\t{command.__str__(self)}'
