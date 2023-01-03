@@ -1,12 +1,11 @@
 import crc8
 import logging
-from Utilities import converters
-from commands import m_message
 import enums
+from commands import m_message
+from Utilities import converters
 from commands.r_finite_ramp_by_temperature import finite_ramp_by_temperature_response
 from commands.r_finite_ramp_by_time import finite_ramp_by_time_response
 from commands.r_get_errors_command import get_errors_response
-# from commands.r_finite_ramp_by_time import finite_ramp_by_time_response
 from commands.r_get_status_TCU import get_statusTCU_response
 from commands.r_get_version_command import get_version_response
 from commands.response import response
@@ -70,10 +69,6 @@ class command(m_message.message):
         # copy to new array
 
     def send_message(self):
-        # if self.command_id != m_message.COMMAND_ID['Undefined']:
-        #     logger.info(f'\tCommand {m_message.ID_TO_COMMAND[self.command_id]} was send to device')
-        #     logger.info(f'\tCommand token: {self.command_token}')
-        #     logger.info(f'\tWritten: {len(self.command_array)} bytes\n\n')
         pass
 
     def build_command(self, data):
@@ -154,8 +149,15 @@ class command(m_message.message):
         if self.response.command_ack_code == enums.ACKCODE.Ok:
             self.response.read_data(buffer, EXTRA_DATA_RESPONSE_INDEX)
 
-    def build_response(self, command_id):
-        """ """
+    def build_response(self, command_id) ->object:
+        """
+            Вызывается когда получен ответ от железа для конвертации байтов в команду
+            :param command_id command id (int)
+            :type
+            :Date: 2022-11-30
+            :Version: 1
+            :Authors: bodomus@gmail.com
+        """
         if command_id == 19:  # get GetActiveThermode
             self.response = response()
         if command_id == 22:  # RunTest

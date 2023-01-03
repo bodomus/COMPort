@@ -1,13 +1,0 @@
-
-Œpython:S101"pRename class "get_statusTCU_response" to match the regular expression ^_?([A-Z_][a-zA-Z0-9]*|[a-z_][a-z0-9_]*)$.(²ï¤Ûùÿÿÿÿ
-Mpython:S2638O"0Add a default value to parameter start_position.(ÿÔªüúÿÿÿÿ
-vpython:S117n"_Rename this local variable "heaterQuantity" to match the regular expression ^[_a-z][a-z0-9_]*$.(­ûïŠ
-xpython:S117d"\Rename this local variable "ioStateByte" to match the regular expression ^[_a-z][a-z0-9_]*$.(óÑ‹ùüÿÿÿÿ
-Bpython:S1481u"%Remove the unused local variable "x".(Ø×ÄÖûÿÿÿÿ
->python:S1481€"%Remove the unused local variable "x".(©ýÖ×
-Cpython:S1481µ"%Remove the unused local variable "x".(Àþªºùÿÿÿÿ
-Cpython:S1481Á"%Remove the unused local variable "x".(Àþªºùÿÿÿÿ
-Cpython:S1481Ë"%Remove the unused local variable "x".(Àþªºùÿÿÿÿ
-Rpython:S1135ª"4Complete the task associated to this "TODO" comment.(š›‘úûÿÿÿÿ
-Rpython:S1135Â"4Complete the task associated to this "TODO" comment.(Š¥Žûøÿÿÿÿ
-Rpython:S1135Ì"4Complete the task associated to this "TODO" comment.(Š¥Žûøÿÿÿÿ

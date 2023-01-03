@@ -1,3 +1,6 @@
+from connector import logger
+
+
 def to_u_int_16_ex(array, start_index) -> int:
     if len(array) <= start_index:
         raise IndexError(f'Index out of range {start_index}')

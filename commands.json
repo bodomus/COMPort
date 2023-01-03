@@ -29,20 +29,6 @@
 				"commandId": 33
 			},
 			{
-				"name": "SetTcuState",
-				"commandId": 41,
-				"m_state": 2,
-				"m_runSelfTest": true
-			},
-			{
-				"name": "GetStatusTCU",
-				"commandId": 33
-			},
-			{
-				"name": "GetStatusTCU",
-				"commandId": 33
-			},
-			{
 				"name": "GetActiveThermode",
 				"commandId": 19,
 				"m_thermodeId": 0
