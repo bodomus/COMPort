@@ -7,6 +7,7 @@ import sys
 class portTestCase(unittest.TestCase):
     def test_check_invalid_path_return_exception(self):
         #app.read_comport("xxx.json")
+        app1 = app()
         self.assertRaises(TypeError, 'app.read_comport' "xxx.json")
 
     def test_check_valid_path_return_dictionary(self):

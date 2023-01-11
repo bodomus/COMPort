@@ -45,6 +45,10 @@ class finite_ramp_by_temperature_command(finite_ramp_safe_duration_command):
             self.m_temperature = data['m_temperature']
         if 'm_time' in data.keys():
             self.m_time = data['m_time']
+        if 'm_lowMargin' in data.keys():
+            self.m_lowMargin = data['m_lowMargin']
+        if 'm_highMargin' in data.keys():
+            self.m_highMargin = data['m_highMargin']
 
     def write_data(self):
         """

@@ -83,10 +83,28 @@
 				"m_isCreateTimeMark": false,
 				"m_isDynamicFactor": false,
 				"m_isAllowEmptyBuffer": true,
+				"m_ignoreKdPidParameter": true,
+				"m_isStopOnResponseUnitNo": false,
+				"m_isStopOnResponseUnitYes": false,
+				"m_temperature": 34,
+				"m_lowMargin": 0.1,
+				"m_highMargin": 0.2,
+				"m_time": 100
+			},{
+				"commandId": 29,
+				"name": "FiniteRampByTemperature",
+				"m_allowSafeDurationOffset": false,
+				"m_isWaitForTrigger": false,
+				"m_isPeakDetect": false,
+				"m_isCreateTimeMark": false,
+				"m_isDynamicFactor": false,
+				"m_isAllowEmptyBuffer": true,
 				"m_ignoreKdPidParameter": false,
 				"m_isStopOnResponseUnitNo": false,
 				"m_isStopOnResponseUnitYes": false,
 				"m_temperature": 32,
+				"m_lowMargin": 0.1,
+				"m_highMargin": 0.2,
 				"m_time": 100
 			},{
 				"commandId": 28,
@@ -113,9 +131,17 @@
 				"m_isNoPressed": false
 			},
 			{
+				"name": "GetStatusTCU",
+				"commandId": 33
+			},
+			{
 				"name": "RunTest",
 				"commandId": 22,
 				"m_isResetClock": true
+			},
+			{
+				"name": "GetStatusTCU",
+				"commandId": 33
 			}
 		]
 	}

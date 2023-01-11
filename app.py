@@ -16,33 +16,46 @@ from commands.m_stop_test_command import stop_test_command
 from input_commands import *
 from connector import connector
 from commands import m_getVersion_command, m_set_TCU_state
+from state_machine import state_machine
 
 INTERVAL = 50  # ms
 
 
 class app:
     def __init__(self):
+        self.sm = None
         self.ser = None
-        self.current_time = self.getseconds(in_millisecondes=True)
+        self.current_time = self.getmseconds()
         self.token = 0
         self.disable_get_status = False
         self.input_commands = input_commands()
         self.input_commands.load_commands("commands.json")
         self.waiting_self_test = False
+        self.current_state = enums.SystemState.SafeMode
+        self.run_count = 0
 
     def initialize(self):
         con = connector("preferences.json")
         self.ser = con.get_com_port()
+        self.sm = state_machine(self.ser)
 
     def finalize(self):
         if self.ser is not None and self.ser.is_open:
             self.ser.close()
 
-    def getseconds(self, in_millisecondes=False):
-        now = datetime.now()
-        if in_millisecondes:
-            return (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds() * 1000
-        return round((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds())
+    def read_comport_preferences(data):
+        """
+        read comport preferences
+        :return:
+        """
+        pass
+
+    def getmseconds(self):
+        return round(time.time() * 1000)
+        # now = datetime.now()
+        # if in_millisecondes:
+        #     return (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds() * 1000
+        # return round((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds())
 
     def get_status_tcu(self, token):
         """
@@ -112,57 +125,64 @@ class app:
         command.to_bytes()
         return command
 
-    def run(self):
+    def exec_test(self):
         current_command_index = 0
         com = None
         self.initialize()
+        self.current_time = self.getmseconds()
         try:
             while 1:
                 self.token += 1
-                t = self.getseconds(in_millisecondes=True)
-                if len(self.input_commands.commands) == current_command_index:
+                t = self.getmseconds()
+                if len(self.input_commands.commands) == current_command_index or self.token == -1:
                     return
-                # if self.current_time + 50 < t:
-                #     com = self.get_status_tcu(self.token)
-                # else:
-                data = self.input_commands.commands[current_command_index]
-                com = self.command_builder(data["commandId"], self.token, data)
+                logger.info("CURRENT command index: {0}".format(current_command_index))
+                logger.info("::: CURRENT DIFFERENT TIME: {0}".format(t - self.current_time))
+
+                if t - self.current_time > 300:
+                    com = self.get_status_tcu(self.token)
+                else:
+                    data = self.input_commands.commands[current_command_index]
+                    com = self.command_builder(data["commandId"], self.token, data)
+                    current_command_index += 1
                 if com.command_id == enums.COMMAND_ID.SetTcuState and com.m_state == enums.SystemState.RestMode:
                     self.waiting_self_test = True
-                current_command_index += 1
+                    self.sm.waiting_self_test = True
+                if com.command_id == enums.COMMAND_ID.RunTest:
+                    self.sm.waiting_run_test = True
+                    self.run_count += 1
+                if com.command_id == enums.COMMAND_ID.StopTest:
+                    self.sm.waiting_stop_test = True
+                if com.command_id == enums.COMMAND_ID.SetTcuState and com.m_state == enums.SystemState.TestInit:
+                    self.sm.waiting_init_test = True
+
 
                 if not self.ser.is_open:
                     self.ser.open()
-                # self.ser.reset_input_buffer()
-                # self.ser.reset_output_buffer()
+                self.ser.reset_input_buffer()
+                self.ser.reset_output_buffer()
                 # time.sleep(0.5)
                 send_length = self.ser.write(com.command_array)
-                self.ser.flush()
-                time.sleep(0.5)
+                # self.ser.flush()
+                time.sleep(0.08)
 
                 # TODO read all bytes as one packet
-                # while self.ser.in_waiting:
-                #     data = self.ser.read(command_length)
-                wait_bytes = self.ser.in_waiting
                 header = self.ser.read(4)
                 command_length = com.header_length_from_bytes(header)
-
                 while self.ser.in_waiting:
                     data = self.ser.read(command_length)
-                    self.ser.reset_input_buffer()
-                    self.ser.reset_output_buffer()
+                    # self.ser.reset_input_buffer()
+                    # self.ser.reset_output_buffer()
                     com.receive_response(header, data)
                     com.response.response_message()
-                    if com.command_id == enums.COMMAND_ID.GetStatusTCU and self.waiting_self_test:
-                        time.sleep(.5)
-                        if com.response.get_state() != enums.SystemState.RestMode.value:
-                            self.input_commands.commands.insert(current_command_index,
-                                                                {"commandId": enums.COMMAND_ID.GetStatusTCU.value})
-                        else:
-                            self.waiting_self_test = False
+
+                    self.token = self.sm.do_process(self.token, com, current_command_index, self.run_count)
+                    self.current_state = self.sm.get_state()
+                    logger.info("::: CURRENT APP STATE: {0}\n".format(self.current_state))
+                    if self.token == -1:
+                        return
 
                 self.current_time = t
-                self.ser.close()
         #
         finally:
             self.finalize()
@@ -171,17 +191,17 @@ class app:
 if __name__ == '__main__':
     import logging.config
 
-    # logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',
-    #                     level=logging.DEBUG)
-    logging.basicConfig(filename="log.log",
-                        filemode='a',
-                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                        datefmt='%H:%M:%S',
+    logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',
                         level=logging.DEBUG)
+    # logging.basicConfig(filename="log.log",
+    #                     filemode='a',
+    #                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+    #                     datefmt='%H:%M:%S',
+    #                     level=logging.DEBUG)
     logging.info('start app module.')
     app = app()
-    start_time = app.getseconds(in_millisecondes=True)
-    app.run()
-    end_time = app.getseconds(in_millisecondes=True)
+    start_time = app.getmseconds()
+    app.exec_test()
+    end_time = app.getmseconds()
     total = (end_time - start_time) / 1000
     logger.info("Complete. Total running time {:.3f} seconds".format(total))

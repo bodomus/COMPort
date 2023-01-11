@@ -17,8 +17,6 @@ D
 commands/r_status.py,e\c\ec329070e2fbde1ca6b7c13e52fbe3594da6dfaf
 P
  commands/m_getVersion_command.py,4\8\48f89786f1de6718ed1ff37d70ff44c92fe237fe
-Y
-)commands/m_finite_ramp_by_time_command.py,a\0\a07c472f12884af3f3e38a1c36ef5f267e8f08cd
 R
 "commands/m_clear_command_buffer.py,4\6\460edcb38f6d16348d9db5cda20309b55e9ee415
 P
@@ -29,8 +27,6 @@ K
 Utilities/temp_converter.py,3\a\3ab34ea466610be60368075beb3da2e081c7dc63
 C
 response_builder.py,e\c\ec51fb4dcaeded147d8c728028d9db092010ab28
-;
-miniterm.py,3\8\3886c478a67df06464c6df6ca6280c8180389a71
 J
 finiteRampByTimeCommand.py,d\4\d43fae3a32440c2b7aee57e1d83a74597b24ae4a
 =
@@ -39,5 +35,27 @@ J
 crc8.py,b\4\b44590a38c0467bfc903666f6da7e3250a68452d
 <
 connector.py,4\9\49b66e8a3132c071fa86a7eea5f903cce311294b
-P
- commands/r_get_thermode_state.py,4\e\4effa722c76469868590a35f87b6b97499edc847
+Q
+!commands/m_temperature_command.py,7\b\7bb2796abe79a02480a07f36305eee19b4c63d0f
+J
+commands/tcu_error_code.py,7\a\7a9dea639676b1dde35629c0c32bfbb2d005f2b0
+Q
+!commands/r_finite_ramp_by_time.py,1\3\13b6233541fec501b6643198a57ffc92e51eab87
+X
+(commands/r_finite_ramp_by_temperature.py,c\1\c1d69a9b566868c3a46dec9e401d35f61c809e87
+K
+commands/error_occurance.py,4\c\4ca7f2acdef6d88b7150fcddc515d7be664ef847
+L
+commands/r_get_status_TCU.py,5\c\5cc127caee319c559b36dbef9208ab194870b438
+B
+Logs/short_new.log,4\3\43741e3b3c40d96da3ae561119cadd03bcb44ad8
+@
+Logs/preinit.txt,b\c\bc35e788ef47b0d3bd2916cda97f035a8df29f95
+R
+"commands/m_getstatusTCU_command.py,7\e\7e9ab1b90bb941567a8d9abc0608dffb812f074a
+C
+Logs/21-12-2022.txt,3\9\397dc571a68d6f3c8021f89565d738f85041881a
+C
+Logs/FullTest19.txt,7\4\74eeefdeb34555f50b73bbd0a7139ec1e53e5ffb
+@
+preferences.json,f\9\f9e104df57c18bd5c15bb225f9ac17bbb6a66339
